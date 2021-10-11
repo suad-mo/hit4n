@@ -1,0 +1,7 @@
+{
+  "name": "hit4n",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
