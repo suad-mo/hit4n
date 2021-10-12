@@ -1,0 +1,59 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{newGame.gamer}}</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button (click)="onCancel()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-grid fixed>
+    <!-- <ion-row>
+      <ion-col size="3">
+        <ion-button (click)="onStop()">
+          <ion-icon slot="icon-only" name="stop"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row> -->
+    <ion-row *ngFor="let h of newGame.hits; index as i" color="success">
+      <ion-col size="1" offset="1">
+        <ion-chip color="primary">
+          <ion-label color="primary">{{i + 1}}.</ion-label>
+        </ion-chip>
+      </ion-col>
+      <ion-col size="1">
+      </ion-col>
+      <ion-col size="1" *ngFor="let x of h.xxxx">
+        <!-- <ion-input type="text"  [value]="x"></ion-input> -->
+        <ion-chip color="primary">
+          <ion-label color="primary">{{x}}</ion-label>
+        </ion-chip>
+      </ion-col>
+      <ion-col size="1" offset="1">
+        <ion-chip color="primary">
+          <ion-label color="primary"><strong>{{h.total}}</strong></ion-label>
+        </ion-chip>
+      </ion-col>
+      <ion-col size="1">
+        <ion-chip color="primary">
+          <ion-label color="primary">{{h.place}}</ion-label>
+        </ion-chip>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="2" offset="1">
+      </ion-col>
+      <!-- <ion-col size="1" *ngFor="let n of noveCifre">
+        <ion-chip>
+          <ion-label color="primary">{{n}}</ion-label>
+        </ion-chip>
+      </ion-col> -->
+    </ion-row>
+  </ion-grid>
+</ion-content>
+
+<ion-footer>
+  <app-keyboard></app-keyboard>
+</ion-footer>
