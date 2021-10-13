@@ -14,6 +14,7 @@ export class HitGame {
   public start: Date;
   public end: Date;
   public isBingo: boolean;
+  public duration: number;
   constructor(public gamer: string) {
     this.xxxx = this.generateXXXX();
     this.hits = [];
@@ -21,10 +22,15 @@ export class HitGame {
     this.start = new Date();
     this.end = new Date();
     this.isBingo = false;
+    this.duration = 0;
   }
 
   public setStart() {
     this.start = new Date();
+  }
+
+  public getDuration(): number {
+    return this.end.getTime() - this.start.getTime();
   }
 
   public addHit(nums: number[]) {
@@ -53,11 +59,16 @@ export class HitGame {
     if (place === 4) {
       this.isBingo = true;
       this.setEnd();
+      this.setDuration();
     }
   }
 
   private setEnd() {
     this.end = new Date();
+  }
+
+  private setDuration() {
+    this.duration = (this.end.getTime() - this.start.getTime());
   }
 
   private generateXXXX(): number[] {

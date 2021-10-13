@@ -43,6 +43,7 @@ export class NewGameComponent implements OnInit {
       this.newGame.addHit(this.currentEnterNums);
       this.currentEnterNums = [];
       if (this.newGame.isBingo) {
+        this.modalCtrl.dismiss(this.newGame, 'success');
         this.isKeyboard = false;
       }
     }

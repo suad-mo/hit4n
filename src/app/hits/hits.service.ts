@@ -37,7 +37,7 @@ export class HitsService {
     );
   }
 
-  autoReadGamerGames() {
+  readStore() {
     let fetchGamer: string;
     return from(Storage.get({ key: 'gamer'}))
       .pipe(
@@ -50,31 +50,23 @@ export class HitsService {
         }),
         map(storeData => {
           const parseTopTenGames = JSON.parse(storeData.value) as HitGame[];
-          return parseTopTenGames;
-        }),
-        tap(topTenGames => {
-          this._gamerGames.next({
+          return {
             gamer: fetchGamer,
-            // eslint-disable-next-line object-shorthand
-            topTenGames: topTenGames
+            topTenGames: parseTopTenGames
+          };
+        }),
+        tap(data => {
+          this._gamerGames.next({
+            gamer: data.gamer,
+            topTenGames: data.topTenGames
           });
         })
       );
   }
 
-  private storeSetData(gamer: string, topTenGames: HitGame[]) {
+  writeStore(gamer: string, topTenGames: HitGame[]) {
     const topTenGamesData = JSON.stringify(topTenGames);
     Storage.set({ key: 'gamer', value: gamer });
     Storage.set({ key: 'topTenGames', value: topTenGamesData });
   }
-
-  // private storeGetData() {
-  //   try {
-  //     const gamer = Storage.get({ key: 'gamer' });
-  //     if (gamer) {
-  //       this.gamer = gamer;
-  //     }
-  //   } catch (error) {
-  //   }
-  // }
 }
