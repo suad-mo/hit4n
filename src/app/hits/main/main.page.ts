@@ -8,6 +8,7 @@ import { NewGameComponent } from './new-game/new-game.component';
   styleUrls: ['./main.page.scss'],
 })
 export class MainPage implements OnInit {
+  gamer = 'Suad';
 
   constructor(private modalCtrl: ModalController) { }
 
@@ -24,8 +25,10 @@ export class MainPage implements OnInit {
       .create({
         component: NewGameComponent,
         componentProps: {
-          gamer: 'Suad'
+          gamer: this.gamer,
         }
+        //presentingElement: this.modalCtrl.getTop()
+        , animated: true
       })
       .then(modalEl => {
         modalEl.present();
