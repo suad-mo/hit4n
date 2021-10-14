@@ -10,13 +10,13 @@
       <ion-title>Top Ten Games</ion-title>
     </ion-list-header>
     <ion-item
-      *ngFor="let g of topTenGames; index as i"
+      *ngFor="let g of topTen; index as i"
       class="ion-padding-horizontal"
-      button (click)="true"
-      [routerLink]="['/','hits', 'main', 'games', i]"
+      button (click)="onOpenDetails(g, i, g._xxxx)"
       detail
       [color]="lastGameIndex !== i ? undefined : 'warning'"
     >
+    <!-- [routerLink]="['/','hits', 'main', 'games', i]" -->
       <ion-grid fixed>
         <ion-row>
           <ion-col size="5">
@@ -33,7 +33,7 @@
   <ion-grid class="ion-align-items-center">
     <ion-row>
       <ion-col sizeMd="6" offsetMd="3">
-        <ion-button (click)="onStartNewGame()" expand="block" fill="clear" shape="round">
+        <ion-button (click)="onOpenNewGame()" expand="block" fill="clear" shape="round">
           New game...
         </ion-button>
       </ion-col>

@@ -13,6 +13,7 @@ import { HitsService } from '../../hits.service';
 export class DetailsGamePage implements OnInit {
   hitGame: HitGame;
   xxxx: number[] = [];
+  id: number;
 
   constructor(
     private route: ActivatedRoute,
@@ -21,25 +22,35 @@ export class DetailsGamePage implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.route.paramMap.subscribe((paramMap) => {
-      if (!paramMap.has('id')) {
-        this.navCtrl.navigateBack('hits/main');
-        return;
-      }
-      this.hitsService.getGame(+paramMap.get('id')).subscribe((hitGame) => {
-        if (hitGame) {
-          this.hitGame = hitGame;
-          // this.xxxx = hitGame.hits[this.hitGame.hits.length -1].aaaa;
-          this.xxxx = hitGame.xxxx;
-          console.log(this.hitGame);
-        } else {
-          //console.log(err);
-        this.navCtrl.navigateBack('hits/main');
-        }
-      }, err => {
-        //console.log(err);
-        this.navCtrl.navigateBack('hits/main');
-      });
-    });
+    const data = this.hitsService.getHitGame();
+    if (!data || !data.hitGame) {
+      this.navCtrl.navigateBack('hits/main');
+      return;
+    }
+    this.hitGame = data.hitGame;
+    this.id = data.index;
+    this.xxxx = data.xxxx;
+    // this.route.paramMap.subscribe((paramMap) => {
+    //   if (!paramMap.has('id')) {
+    //     this.navCtrl.navigateBack('hits/main');
+    //     return;
+    //   }
+    //   this.id = +paramMap.get('id');
+    //   this.hitsService.getGame(+paramMap.get('id')).subscribe((hitGame) => {
+    //     if (hitGame) {
+    //       this.hitGame = hitGame;
+    //       console.log(this.hitGame);
+    //       // this.xxxx = hitGame.hits[this.hitGame.hits.length -1].aaaa;
+    //       this.xxxx = hitGame.xxxx;
+    //       console.log(this.xxxx);
+    //     } else {
+    //       //console.log(err);
+    //     this.navCtrl.navigateBack('hits/main');
+    //     }
+    //   }, err => {
+    //     console.log(err);
+    //     this.navCtrl.navigateBack('hits/main');
+    //   });
+    // });
   }
 }

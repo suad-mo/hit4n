@@ -12,22 +12,16 @@ export class Hit {
 }
 
 export class HitGame {
-  private _xxxx: number[];
-  public hits: Hit[];
-  public isFinish: boolean;
-  public start: Date;
-  public end: Date;
-  public isBingo: boolean;
-  public duration: number;
+  public _xxxx: number[] = [];
+  public hits: Hit[] = [];
+  public isFinish = false;
+  public start = new Date();
+  public end = new Date();
+  public isBingo = false;
+  public duration = 0;
   constructor(public gamer: string) {
     // eslint-disable-next-line no-underscore-dangle
-    this._xxxx = this.generateXXXX();
-    this.hits = [];
-    this.isFinish = false;
-    this.start = new Date();
-    this.end = new Date();
-    this.isBingo = false;
-    this.duration = 0;
+    this.generateXXXX();
   }
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -93,7 +87,7 @@ export class HitGame {
     this.duration = this.end.getTime() - this.start.getTime();
   }
 
-  private generateXXXX(): number[] {
+  private generateXXXX(): void {
     const initArray: number[] = [];
     for (let i = 0; i < 10; i++) {
       initArray.push(i);
@@ -108,6 +102,7 @@ export class HitGame {
       initArray[last] = elementX;
       --len;
     }
-    return initArray.slice(6);
+    // eslint-disable-next-line no-underscore-dangle
+    this._xxxx = [...initArray.slice(6)];
   }
 }

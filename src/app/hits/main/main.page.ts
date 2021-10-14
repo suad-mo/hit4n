@@ -1,8 +1,11 @@
 /* eslint-disable @typescript-eslint/member-ordering */
+import { Route } from '@angular/compiler/src/core';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { Storage } from '@capacitor/storage';
+import { Router } from '@angular/router';
+import { ModalController, NavController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
-import { domainToASCII } from 'url';
+
 import { HitGame } from '../hits.model';
 import { HitsService } from '../hits.service';
 import { NewGameComponent } from './new-game/new-game.component';
@@ -17,14 +20,21 @@ export class MainPage implements OnInit, OnDestroy {
   topTenGames: HitGame[] = [];
   lastGameIndex: number;
 
+  name: string;
+  topTen: HitGame[] = [];
+
   private hitSub: Subscription;
 
   constructor(
     private modalCtrl: ModalController,
-    private hitsService: HitsService
+    private hitsService: HitsService,
+    private router: Router,
+    private navCtrl: NavController
   ) { }
 
   ngOnInit() {
+    this.checkTopTenGames();
+    this.checkName();
     this.hitSub = this.hitsService.readStore()
       .subscribe(data => {
         if (data && data.gamer) {
@@ -32,12 +42,22 @@ export class MainPage implements OnInit, OnDestroy {
         }
         if (data && data.topTenGames?.length > 0) {
           this.topTenGames = [...data.topTenGames];
-          this.topTenGames.sort((a, b) => a.duration - b.duration);
+          //this.topTenGames.sort((a, b) => a.duration - b.duration);
         }
       });
   }
 
-  onStartNewGame() {
+  checkName = async () => {
+    const { value } = await Storage.get({ key: 'gamer' });
+    this.name = value;
+  };
+
+  checkTopTenGames = async () => {
+    const { value } = await Storage.get({ key: 'topTenGames' });
+    this.topTen = JSON.parse(value) as HitGame[];;
+  };
+
+  onOpenNewGame() {
     console.log('Početak igre...');
     this.openNewGameModal();
   }
@@ -57,24 +77,42 @@ export class MainPage implements OnInit, OnDestroy {
         return modalEl.onDidDismiss();
       })
       .then(resData => {
-        console.log(resData);
         if (resData.role === 'success') {
-          if (this.topTenGames.length <= 9) {
-            this.topTenGames.push(resData.data);
-            this.topTenGames.sort((a, b) => a.duration - b.duration);
+          const topTenG = [...this.topTenGames];
+          let isUpdateTopTen = false;
+          if (topTenG.length <= 9) {
+            topTenG.push(resData.data);
+            topTenG.sort((a, b) => a.duration - b.duration);
+            isUpdateTopTen = true;
           } else {
-            if (this.topTenGames[9].duration > resData.data.duration) {
-              this.topTenGames[9] = resData.data;
-              this.topTenGames.sort((a, b) => a.duration - b.duration);
+            if (topTenG[9].duration > resData.data.duration) {
+              topTenG[9] = resData.data;
+              topTenG.sort((a, b) => a.duration - b.duration);
+              isUpdateTopTen = true;
             }
           }
-          this.lastGameIndex = this.topTenGames.findIndex(hitGame =>
-            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-             hitGame.duration === resData.data.duration
-          );
-          this.hitsService.writeStore(this.gamer, this.topTenGames);
+          if (isUpdateTopTen) {
+            this.lastGameIndex = topTenG.findIndex(hitGame =>
+              // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+              hitGame.duration === resData.data.duration
+            );
+            this.topTenGames = [...topTenG];
+            this.topTen = [...topTenG];
+            // this.hitsService.writeStore(this.gamer, topTenG);
+            this.setTopTenGames(topTenG);
+          }
         }
       });
+  }
+
+  setTopTenGames = async (topTen: HitGame[]) => {
+    const topTenGamesData = JSON.stringify(topTen);
+    await Storage.set({ key: 'topTenGames', value: topTenGamesData});
+  };
+
+  onOpenDetails(hitGame: HitGame, index: number, xxxx: number[]) {
+    this.hitsService.setHitGame(hitGame, index, xxxx);
+    this.router.navigate(['hits/main/games',index]);
   }
 
   ngOnDestroy() {

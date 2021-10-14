@@ -9,12 +9,31 @@ import { HitGame } from './hits.model';
   providedIn: 'root',
 })
 export class HitsService {
+  // hitGames: HitGame[];
+  private _hitGame: HitGame;
+  private _index: number;
+  private _xxxx: number[];
+
   private _gamerGames = new BehaviorSubject<{
     gamer: string;
     topTenGames: HitGame[];
   }>(null);
 
   constructor() {}
+
+  public setHitGame(hitGame: HitGame, index: number, xxxx: number[]) {
+    this._hitGame = hitGame;
+    this._index = index;
+    this._xxxx = xxxx;
+  }
+
+  public getHitGame() {
+    return {
+      hitGame: this._hitGame,
+      index: this._index,
+      xxxx: this._xxxx
+    };
+  }
 
   get gamer() {
     return this._gamerGames.asObservable().pipe(
@@ -39,6 +58,15 @@ export class HitsService {
       })
     );
   }
+
+  checkName = async () => {
+    const { value } = await Storage.get({ key: 'gamer' });
+    //alert(`Hello ${value}!`);
+  };
+
+  checkTopTenGames = async () => {
+    const { value } = await Storage.get({ key: 'topTenGames' });
+  };
 
   getGame(index: number) {
     return this._gamerGames.asObservable().pipe(
@@ -68,7 +96,8 @@ export class HitsService {
           gamer: fetchGamer,
           topTenGames: parseTopTenGames,
         };
-      }),
+      })
+      ,
       tap((data) => {
         this._gamerGames.next({
           gamer: data.gamer,
@@ -82,5 +111,6 @@ export class HitsService {
     const topTenGamesData = JSON.stringify(topTenGames);
     Storage.set({ key: 'gamer', value: gamer });
     Storage.set({ key: 'topTenGames', value: topTenGamesData });
+    this._gamerGames.next({ gamer, topTenGames });
   }
 }
