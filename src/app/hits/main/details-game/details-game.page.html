@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Game details</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="hits"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid fixed *ngIf="hitGame">
+    <ion-row>
+      <ion-col size="12">
+        <ion-item>
+          <ion-text color="secondary">
+            <h1>{{ hitGame.gamer }} - {{ hitGame.duration | date: 'mm:ss:SS' }}</h1>
+          </ion-text>
+          <ion-note slot="end">{{ hitGame.start | date: 'dd.MM.YYYY' }}</ion-note>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="1" *ngFor="let x of xxxx">
+        <ion-chip color="primary">
+          <ion-label color="primary"><strong>{{ x }}</strong></ion-label>
+        </ion-chip>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngFor="let h of hitGame?.hits; index as i" color="success">
+      <ion-col size="1" offset="1">
+        <ion-chip color="primary">
+          <ion-label color="primary">{{ i + 1 }}.</ion-label>
+        </ion-chip>
+      </ion-col>
+      <ion-col size="1"> </ion-col>
+      <ion-col size="1" *ngFor="let n of h.aaaa">
+        <ion-chip [color]="n.t ? 'danger' : 'primary'">
+          <ion-label [color]="n.p ? 'danger' : 'primary'"><strong>{{n.a}}</strong></ion-label>
+        </ion-chip>
+      </ion-col>
+      <ion-col size="1"> </ion-col>
+      <ion-col size="1" offset="1">
+        <ion-chip color="primary">
+          <ion-label color="primary"><strong>{{ h.total }}</strong></ion-label>
+        </ion-chip>
+      </ion-col>
+      <ion-col size="1">
+        <ion-chip color="primary">
+          <ion-label color="primary">{{ h.place }}</ion-label>
+        </ion-chip>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
