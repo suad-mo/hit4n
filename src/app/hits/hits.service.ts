@@ -6,16 +6,19 @@ import { map, switchMap, tap } from 'rxjs/operators';
 import { HitGame } from './hits.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class HitsService {
-  private _gamerGames = new BehaviorSubject<{ gamer: string; topTenGames: HitGame[]}>(null);
+  private _gamerGames = new BehaviorSubject<{
+    gamer: string;
+    topTenGames: HitGame[];
+  }>(null);
 
-  constructor() { }
+  constructor() {}
 
   get gamer() {
     return this._gamerGames.asObservable().pipe(
-      map(data => {
+      map((data) => {
         if (data && data.gamer) {
           return data.gamer;
         } else {
@@ -27,7 +30,7 @@ export class HitsService {
 
   get topTenGames() {
     return this._gamerGames.asObservable().pipe(
-      map(data => {
+      map((data) => {
         if (data && data.topTenGames) {
           return data.topTenGames;
         } else {
@@ -37,31 +40,42 @@ export class HitsService {
     );
   }
 
+  getGame(index: number) {
+    return this._gamerGames.asObservable().pipe(
+      map((data) => {
+        if (data && data.topTenGames) {
+          return data.topTenGames[index];
+        } else {
+          return null;
+        }
+      })
+    );
+  }
+
   readStore() {
     let fetchGamer: string;
-    return from(Storage.get({ key: 'gamer'}))
-      .pipe(
-        switchMap(storeData => {
-          if (!storeData || !storeData.value) {
-            fetchGamer = null;
-          }
-          fetchGamer = storeData.value;
-          return from(Storage.get({ key: 'topTenGames'}));
-        }),
-        map(storeData => {
-          const parseTopTenGames = JSON.parse(storeData.value) as HitGame[];
-          return {
-            gamer: fetchGamer,
-            topTenGames: parseTopTenGames
-          };
-        }),
-        tap(data => {
-          this._gamerGames.next({
-            gamer: data.gamer,
-            topTenGames: data.topTenGames
-          });
-        })
-      );
+    return from(Storage.get({ key: 'gamer' })).pipe(
+      switchMap((storeData) => {
+        if (!storeData || !storeData.value) {
+          fetchGamer = null;
+        }
+        fetchGamer = storeData.value;
+        return from(Storage.get({ key: 'topTenGames' }));
+      }),
+      map((storeData) => {
+        const parseTopTenGames = JSON.parse(storeData.value) as HitGame[];
+        return {
+          gamer: fetchGamer,
+          topTenGames: parseTopTenGames,
+        };
+      }),
+      tap((data) => {
+        this._gamerGames.next({
+          gamer: data.gamer,
+          topTenGames: data.topTenGames,
+        });
+      })
+    );
   }
 
   writeStore(gamer: string, topTenGames: HitGame[]) {

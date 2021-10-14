@@ -32,7 +32,6 @@ export class KeyboardComponent implements OnInit {
       return;
     }
     this.total++;
-    console.log('n:', n);
     this.nums.push(n);
     this.isOdabran[n]=true;
     this.newEnterNumber.emit(this.nums);

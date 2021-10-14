@@ -34,7 +34,6 @@ export class NewGameComponent implements OnInit {
   }
 
   onNewNumbers(nums: number[]) {
-    console.log('event', nums);
     this.currentEnterNums = [...nums];
   }
 

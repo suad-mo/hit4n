@@ -59,12 +59,12 @@ export class MainPage implements OnInit, OnDestroy {
       .then(resData => {
         console.log(resData);
         if (resData.role === 'success') {
-          if (this.topTenGames.length <= 5) {
+          if (this.topTenGames.length <= 9) {
             this.topTenGames.push(resData.data);
             this.topTenGames.sort((a, b) => a.duration - b.duration);
           } else {
-            if (this.topTenGames[4].duration > resData.data.duration) {
-              this.topTenGames[4].duration = resData.data.duration;
+            if (this.topTenGames[9].duration > resData.data.duration) {
+              this.topTenGames[9] = resData.data;
               this.topTenGames.sort((a, b) => a.duration - b.duration);
             }
           }

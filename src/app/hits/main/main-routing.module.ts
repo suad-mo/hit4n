@@ -7,7 +7,12 @@ const routes: Routes = [
   {
     path: '',
     component: MainPage
+  },
+  {
+    path: 'games/:id',
+    loadChildren: () => import('./details-game/details-game.module').then( m => m.DetailsGamePageModule)
   }
+
 ];
 
 @NgModule({

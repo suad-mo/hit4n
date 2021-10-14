@@ -1,14 +1,18 @@
 /* eslint-disable @typescript-eslint/member-ordering */
 export class Hit {
   constructor(
-    public aaaa: number[],
+    public aaaa: {
+      a: number;
+      p: boolean;
+      t: boolean;
+    }[],
     public place: number,
     public total: number
   ) {}
 }
 
 export class HitGame {
-  private xxxx: number[];
+  private _xxxx: number[];
   public hits: Hit[];
   public isFinish: boolean;
   public start: Date;
@@ -16,7 +20,8 @@ export class HitGame {
   public isBingo: boolean;
   public duration: number;
   constructor(public gamer: string) {
-    this.xxxx = this.generateXXXX();
+    // eslint-disable-next-line no-underscore-dangle
+    this._xxxx = this.generateXXXX();
     this.hits = [];
     this.isFinish = false;
     this.start = new Date();
@@ -25,6 +30,11 @@ export class HitGame {
     this.duration = 0;
   }
 
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  public get xxxx(): number[] {
+    // eslint-disable-next-line no-underscore-dangle
+    return [...this._xxxx];
+  }
   public setStart() {
     this.start = new Date();
   }
@@ -34,27 +44,39 @@ export class HitGame {
   }
 
   public addHit(nums: number[]) {
+    const aaa: {
+      a: number;
+      p: boolean;
+      t: boolean;
+    }[] = nums.map((n) => ({
+      a: n,
+      p: false,
+      t: false,
+    }));
+
     if (this.isBingo) {
       return;
     }
     let place = 0;
     let total = 0;
     // eslint-disable-next-line @typescript-eslint/prefer-for-of
-    for (let i = 0; i < nums.length; i++) {
-      const a = nums[i];
+    for (let i = 0; i < aaa.length; i++) {
+      const a = aaa[i];
       const c = this.xxxx[i];
       // eslint-disable-next-line @typescript-eslint/prefer-for-of
       for (let j = 0; j < this.xxxx.length; j++) {
         const b = this.xxxx[j];
-        if (a === b) {
+        if (a.a === b) {
+          a.t = true;
           total++;
         }
       }
-      if (a === c) {
+      if (a.a === c) {
+        a.p = true;
         place++;
       }
     }
-    const hit = new Hit(nums, place, total);
+    const hit = new Hit(aaa, place, total);
     this.hits.push(hit);
     if (place === 4) {
       this.isBingo = true;
@@ -68,7 +90,7 @@ export class HitGame {
   }
 
   private setDuration() {
-    this.duration = (this.end.getTime() - this.start.getTime());
+    this.duration = this.end.getTime() - this.start.getTime();
   }
 
   private generateXXXX(): number[] {
@@ -86,6 +108,6 @@ export class HitGame {
       initArray[last] = elementX;
       --len;
     }
-    return (this.xxxx = initArray.slice(6));
+    return initArray.slice(6);
   }
 }
