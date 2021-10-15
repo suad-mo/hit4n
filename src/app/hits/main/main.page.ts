@@ -47,6 +47,17 @@ export class MainPage implements OnInit, OnDestroy {
       });
   }
 
+  async ionViewDidEnter() {
+    await this.checkName();
+  }
+
+  checkGamer = async () => {
+    const { value } = await Storage.get({ key: 'gamer' });
+    if (value) {
+      this.gamer = value;
+    }
+  };
+
   checkName = async () => {
     const { value } = await Storage.get({ key: 'gamer' });
     this.name = value;

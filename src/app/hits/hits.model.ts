@@ -12,7 +12,7 @@ export class Hit {
 }
 
 export class HitGame {
-  public _xxxx: number[] = [];
+  private _xxxx: number[] = [];
   public hits: Hit[] = [];
   public isFinish = false;
   public start = new Date();
