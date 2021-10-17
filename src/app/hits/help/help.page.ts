@@ -12,4 +12,7 @@ export class HelpPage implements OnInit {
   ngOnInit() {
   }
 
+  segmentChanged(data: Event) {
+    console.log(data);
+  }
 }
