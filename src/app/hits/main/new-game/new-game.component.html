@@ -65,6 +65,10 @@
 </ion-content>
 
 <ion-footer>
-  <app-keyboard *ngIf="isStarting && isKeyboard" (newEnterNumber)="onNewNumbers($event)"
-    (finishEnterNumber)="onFinishEnterNumbers()"></app-keyboard>
+  <app-keyboard
+    *ngIf="isStarting && isKeyboard"
+    [xxxx]="xxxx"
+    (newEnterNumber)="onNewNumbers($event)"
+    (finishEnterNumber)="onFinishEnterNumbers()"
+  ></app-keyboard>
 </ion-footer>

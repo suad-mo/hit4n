@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/semi */
 /* eslint-disable @typescript-eslint/member-ordering */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ModalController, NavController } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
+import { Observable, Subscription } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
 
-import { HitGame } from '../hits.model';
+import { Hit, HitGame } from '../hits.model';
 import { HitsService } from '../hits.service';
 import { NewGameComponent } from './new-game/new-game.component';
 
@@ -12,10 +15,12 @@ import { NewGameComponent } from './new-game/new-game.component';
   templateUrl: './main.page.html',
   styleUrls: ['./main.page.scss'],
 })
-export class MainPage implements OnInit {
+export class MainPage implements OnInit, OnDestroy {
   lastGameIndex: number;
-  topTenGames: HitGame[] = [];
-  currentGamer: string;
+  topTenGames$ = new Observable<HitGame[]>();
+  currentGamer$ = new Observable<string>();
+
+  private sub: Subscription;
 
   constructor(
     private modalCtrl: ModalController,
@@ -24,12 +29,8 @@ export class MainPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.topTenGames = this.hitService.topTenGames;
-    this.currentGamer = this.hitService.currentGamer;
-  }
-
-  ionViewDidEnter() {
-    this.currentGamer = this.hitService.currentGamer;
+    this.topTenGames$ = this.hitService.topTenGames;
+    this.currentGamer$ = this.hitService.currentGamer;
   }
 
   onOpenNewGame() {
@@ -38,11 +39,21 @@ export class MainPage implements OnInit {
   }
 
   private openNewGameModal() {
+    let currentGamer: string;
+    let topTenGames: HitGame[];
+    this.sub = this.currentGamer$.pipe(
+      switchMap(gamer => {
+        currentGamer = gamer;
+        return this.topTenGames$;
+      }))
+      .subscribe(topGames => {
+        topTenGames = topGames
+      });
     this.modalCtrl
       .create({
         component: NewGameComponent,
         componentProps: {
-          gamer: this.currentGamer
+          gamer: currentGamer
         },
         animated: true
       })
@@ -52,7 +63,7 @@ export class MainPage implements OnInit {
       })
       .then(resData => {
         if (resData.role === 'success') {
-          const topTenG = [...this.topTenGames];
+          const topTenG = [...topTenGames];
           let isUpdateTopTen = false;
           if (topTenG.length <= 9) {
             topTenG.push(resData.data);
@@ -69,7 +80,6 @@ export class MainPage implements OnInit {
             this.lastGameIndex = topTenG.findIndex(hitGame =>
               hitGame.duration === resData.data.duration
             );
-            this.topTenGames = [...topTenG];
             this.hitService.setTopTenGames([...topTenG]);
           }
         }
@@ -77,6 +87,13 @@ export class MainPage implements OnInit {
   }
 
   onOpenDetails(index: number) {
-    this.router.navigate(['hits/main/games',index]);
+    this.router.navigate(['hits/main/games', index]);
+  }
+
+  ngOnDestroy() {
+    if (this.sub) {
+      this.sub.unsubscribe();
+    }
   }
 }
+

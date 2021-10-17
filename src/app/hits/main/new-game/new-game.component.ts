@@ -10,6 +10,7 @@ import { Hit, HitGame } from '../../hits.model';
 })
 export class NewGameComponent implements OnInit {
   @Output() newGame: HitGame;
+  @Output() xxxx: number[] = [];
   @Input() gamer: string;
   currentEnterNums: number[];
   isStarting = false;
@@ -21,9 +22,11 @@ export class NewGameComponent implements OnInit {
 
   onStartNewGame() {
     this.newGame = new HitGame(this.gamer);
-    console.log(this.newGame);
+    console.log(this.newGame.xxxx);
     this.isStarting = true;
     this.isKeyboard = true;
+    this.xxxx = this.newGame.xxxx;
+    console.log(this.xxxx);
   }
 
   onCancel() {

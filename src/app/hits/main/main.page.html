@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>{{ currentGamer }}</ion-title>
+    <ion-title>{{ currentGamer$ | async}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -10,7 +10,7 @@
       <ion-title>Top Ten Games</ion-title>
     </ion-list-header>
     <ion-item
-      *ngFor="let g of topTenGames; index as i"
+      *ngFor="let g of (topTenGames$ | async) as topTenGames; index as i"
       class="ion-padding-horizontal"
       button (click)="onOpenDetails(i)"
       detail

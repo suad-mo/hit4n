@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { getInterpolationArgsLength } from '@angular/compiler/src/render3/view/util';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NavController } from '@ionic/angular';
-import { map, take } from 'rxjs/operators';
+import { Observable, of, Subscription } from 'rxjs';
+import { map, take, switchMap } from 'rxjs/operators';
 import { HitGame } from '../../hits.model';
 import { HitsService } from '../../hits.service';
 
@@ -10,10 +12,14 @@ import { HitsService } from '../../hits.service';
   templateUrl: './details-game.page.html',
   styleUrls: ['./details-game.page.scss'],
 })
-export class DetailsGamePage implements OnInit {
+export class DetailsGamePage implements OnInit, OnDestroy {
+  hitGame$: Observable<HitGame>;
+  xxxx$: Observable<number[]>;
   hitGame: HitGame;
-  aaaa: number[] = [];
+  xxxx: number[] = [];
   id: number;
+
+  private sub: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -22,16 +28,30 @@ export class DetailsGamePage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.route.paramMap.subscribe((paramMap) => {
-      if (!paramMap.has('id')) {
-        this.navCtrl.navigateBack('hits/main');
-        return;
-      }
-      this.id = +paramMap.get('id');
-      this.hitGame = this.hitsService.getOneGame(+paramMap.get('id'));
-      if (this.hitGame.hits.length > 0) {
-        this.aaaa = this.hitGame.hits[this.hitGame.hits.length - 1].aaaa.map(a => a.a);
-      }
-    });
+    this.route.paramMap.pipe(
+      switchMap(paramMap => {
+        if (paramMap.has('id')) {
+          const id = +paramMap.get('id');
+          this.id = id;
+          return this.hitsService.getOneGame(id);
+        } else {
+          return of(null);
+        }
+      })).subscribe(hitGame => {
+        if ((typeof hitGame) === 'object') {
+          this.hitGame = hitGame as HitGame;
+          const last = this.hitGame.hits.length - 1;
+          this.xxxx = this.hitGame.hits[last].aaaa.map(a => a.a);
+        } else {
+          this.navCtrl.navigateBack('hits/main');
+        }
+      });
+  }
+
+
+  ngOnDestroy() {
+    if (this.sub) {
+      this.sub.unsubscribe();
+    }
   }
 }

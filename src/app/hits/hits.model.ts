@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable @typescript-eslint/member-ordering */
 export class Hit {
   constructor(
@@ -21,14 +22,11 @@ export class HitGame {
   public duration = 0;
 
   constructor(public gamer: string) {
-    // eslint-disable-next-line no-underscore-dangle
     this.generateXXXX();
   }
 
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  public get xxxx(): number[] {
-    // eslint-disable-next-line no-underscore-dangle
-    return [...this._xxxx.map(x => x)];
+  public get xxxx() {
+    return this._xxxx.slice();
   }
 
   public setStart() {

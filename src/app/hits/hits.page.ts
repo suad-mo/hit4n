@@ -15,7 +15,7 @@ export class HitsPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-
+    this.hitsService.checkGamerAndTopTenGames();
   }
 
   ngOnDestroy() {

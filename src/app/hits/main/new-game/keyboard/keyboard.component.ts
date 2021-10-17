@@ -14,14 +14,19 @@ export class KeyboardComponent implements OnInit {
   public newEnterNumber: EventEmitter<number[]> = new EventEmitter();
   @Output('finishEnterNumber')
   public finishEnterNumber: EventEmitter<void> = new EventEmitter();
+  @Output('hint')
+  public hint: EventEmitter<number> = new EventEmitter();
 
   @Input('hits')
   public hits: Hit[];
+  @Input('xxxx')
+  public xxxx: number[];
 
   public nums: number[] = [];
-  private total = 0;
+  public total = 0;
 
   isOdabran: boolean[] = [false, false, false, false, false, false, false, false, false, false];
+  isHint = true;
 
   constructor() { }
 
@@ -48,6 +53,18 @@ export class KeyboardComponent implements OnInit {
     this.isOdabran = [false, false, false, false, false, false, false, false, false, false];
     this.total = 0;
     this.nums = [];
+    this.newEnterNumber.emit(this.nums);
+  }
+
+  onHint() {
+    if (this.total >= 4) {
+      return;
+    }
+    const n = this.xxxx[this.total];
+    this.nums.push(n);
+    this.isOdabran[n] = true;
+    this.total++;
+    this.isHint = false;
     this.newEnterNumber.emit(this.nums);
   }
 
