@@ -1,10 +1,7 @@
 /* eslint-disable @typescript-eslint/member-ordering */
-import { Route } from '@angular/compiler/src/core';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Storage } from '@capacitor/storage';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController, NavController } from '@ionic/angular';
-import { Subscription } from 'rxjs';
 
 import { HitGame } from '../hits.model';
 import { HitsService } from '../hits.service';
@@ -15,58 +12,25 @@ import { NewGameComponent } from './new-game/new-game.component';
   templateUrl: './main.page.html',
   styleUrls: ['./main.page.scss'],
 })
-export class MainPage implements OnInit, OnDestroy {
-  gamer = 'Suad';
-  topTenGames: HitGame[] = [];
+export class MainPage implements OnInit {
   lastGameIndex: number;
-
-  name: string;
-  topTen: HitGame[] = [];
-
-  private hitSub: Subscription;
+  topTenGames: HitGame[] = [];
+  currentGamer: string;
 
   constructor(
     private modalCtrl: ModalController,
-    private hitsService: HitsService,
+    private hitService: HitsService,
     private router: Router,
-    private navCtrl: NavController
   ) { }
 
   ngOnInit() {
-    this.checkTopTenGames();
-    this.checkName();
-    this.hitSub = this.hitsService.readStore()
-      .subscribe(data => {
-        if (data && data.gamer) {
-          this.gamer = data.gamer;
-        }
-        if (data && data.topTenGames?.length > 0) {
-          this.topTenGames = [...data.topTenGames];
-          //this.topTenGames.sort((a, b) => a.duration - b.duration);
-        }
-      });
+    this.topTenGames = this.hitService.topTenGames;
+    this.currentGamer = this.hitService.currentGamer;
   }
 
-  async ionViewDidEnter() {
-    await this.checkName();
+  ionViewDidEnter() {
+    this.currentGamer = this.hitService.currentGamer;
   }
-
-  checkGamer = async () => {
-    const { value } = await Storage.get({ key: 'gamer' });
-    if (value) {
-      this.gamer = value;
-    }
-  };
-
-  checkName = async () => {
-    const { value } = await Storage.get({ key: 'gamer' });
-    this.name = value;
-  };
-
-  checkTopTenGames = async () => {
-    const { value } = await Storage.get({ key: 'topTenGames' });
-    this.topTen = JSON.parse(value) as HitGame[];;
-  };
 
   onOpenNewGame() {
     console.log('Početak igre...');
@@ -78,10 +42,9 @@ export class MainPage implements OnInit, OnDestroy {
       .create({
         component: NewGameComponent,
         componentProps: {
-          gamer: this.gamer,
-        }
-        //presentingElement: this.modalCtrl.getTop()
-        , animated: true
+          gamer: this.currentGamer
+        },
+        animated: true
       })
       .then(modalEl => {
         modalEl.present();
@@ -104,32 +67,16 @@ export class MainPage implements OnInit, OnDestroy {
           }
           if (isUpdateTopTen) {
             this.lastGameIndex = topTenG.findIndex(hitGame =>
-              // eslint-disable-next-line @typescript-eslint/no-unused-expressions
               hitGame.duration === resData.data.duration
             );
             this.topTenGames = [...topTenG];
-            this.topTen = [...topTenG];
-            // this.hitsService.writeStore(this.gamer, topTenG);
-            this.setTopTenGames(topTenG);
+            this.hitService.setTopTenGames([...topTenG]);
           }
         }
       });
   }
 
-  setTopTenGames = async (topTen: HitGame[]) => {
-    const topTenGamesData = JSON.stringify(topTen);
-    await Storage.set({ key: 'topTenGames', value: topTenGamesData});
-  };
-
-  onOpenDetails(hitGame: HitGame, index: number, xxxx: number[]) {
-    this.hitsService.setHitGame(hitGame, index, xxxx);
+  onOpenDetails(index: number) {
     this.router.navigate(['hits/main/games',index]);
   }
-
-  ngOnDestroy() {
-    if (this.hitSub) {
-      this.hitSub.unsubscribe();
-    }
-  }
-
 }

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Storage } from '@capacitor/storage';
 import { Dialog } from '@capacitor/dialog';
+import { from, Observable, of } from 'rxjs';
+import { HitsService } from '../hits.service';
 
 @Component({
   selector: 'app-options',
@@ -8,31 +10,29 @@ import { Dialog } from '@capacitor/dialog';
   styleUrls: ['./options.page.scss'],
 })
 export class OptionsPage implements OnInit {
-  gamer = 'Guest';
+  currentGamer: string;
+  toogleCheck = false;
 
-  constructor() { }
+  constructor(
+    private hitService: HitsService
+  ) { }
 
   ngOnInit() {
-    this.checkGamer();
+    this.currentGamer = this.hitService.currentGamer;
   }
 
-  checkGamer = async () => {
-    const { value } = await Storage.get({ key: 'gamer' });
-    if (value) {
-      this.gamer = value;
-    }
-  };
-
-  onChangeGamer = async () => {
-    const { value, cancelled } = await Dialog.prompt({
+  onChangeGamer() {
+    Dialog.prompt({
       title: 'Hello gamer!',
       message: `What's your name?`,
-      inputText: this.gamer
+      inputText: this.currentGamer
+    })
+    .then(resData => {
+      if (!resData.cancelled && resData.value) {
+        this.currentGamer = resData.value;
+        this.hitService.setCurrentGamer(resData.value);
+      }
     });
-    if (!cancelled && value && (this.gamer !== value)) {
-      this.gamer = value;
-      Storage.set({ key: 'gamer', value });
-    }
   };
 
 }

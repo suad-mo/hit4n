@@ -8,7 +8,7 @@ export class Hit {
     }[],
     public place: number,
     public total: number
-  ) {}
+  ) { }
 }
 
 export class HitGame {
@@ -19,6 +19,7 @@ export class HitGame {
   public end = new Date();
   public isBingo = false;
   public duration = 0;
+
   constructor(public gamer: string) {
     // eslint-disable-next-line no-underscore-dangle
     this.generateXXXX();
@@ -27,8 +28,9 @@ export class HitGame {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   public get xxxx(): number[] {
     // eslint-disable-next-line no-underscore-dangle
-    return [...this._xxxx];
+    return [...this._xxxx.map(x => x)];
   }
+
   public setStart() {
     this.start = new Date();
   }

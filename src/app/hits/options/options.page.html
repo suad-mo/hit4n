@@ -12,7 +12,7 @@
   <ion-row>
     <ion-col size="6">
       <ion-item>
-        <ion-label>{{ gamer }}</ion-label>
+        <ion-label>{{ currentGamer }}</ion-label>
       </ion-item>
     </ion-col>
     <ion-col size="6">
@@ -21,5 +21,21 @@
       </ion-button>
     </ion-col>
   </ion-row>
+  <ion-item>
+    <ion-label>{{ !toogleCheck ? 'UPALI' : 'UGASI' }}</ion-label>
+    <ion-toggle [(ngModel)]="toogleCheck"></ion-toggle>
+  </ion-item>
+  <ion-item>
+    <ion-label>Delete top ten games</ion-label>
+    <ion-button (click)="true" fill="clear">
+      <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
+    </ion-button>
+  </ion-item>
+  <ion-item>
+    <ion-label>Load new top ten games</ion-label>
+    <ion-button (click)="true" fill="clear">
+      <ion-icon slot="icon-only" name="download-outline"></ion-icon>
+    </ion-button>
+  </ion-item>
 </ion-grid>
 </ion-content>
