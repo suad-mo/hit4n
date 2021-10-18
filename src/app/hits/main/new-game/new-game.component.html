@@ -2,19 +2,27 @@
   <ion-toolbar>
     <ion-title>{{ gamer }}</ion-title>
     <ion-buttons [slot]="'end'">
-      <ion-button (click)="onCancel()" *ngIf="isStarting">
+      <ion-button (click)="onCancel()">
         <ion-icon name="close"></ion-icon>
       </ion-button>
-      <ion-button (click)="onStartNewGame()" fill="clear" *ngIf="!isStarting">
+      <!-- <ion-button (click)="onStartNewGame()" fill="clear" *ngIf="!isStarting">
         <ion-icon slot="start" name="add"></ion-icon>
         Start...
-      </ion-button>
+      </ion-button> -->
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 <ion-content>
   <div class="ap">
     <ion-grid fixed>
+      <ion-row *ngIf="!isStarting" style="margin-top: 200px;" class="ion-text-center">
+        <ion-col size="12">
+          <ion-button (click)="onStartNewGame()">
+            <ion-icon slot="start" name="add"></ion-icon>
+            Start...
+          </ion-button>
+        </ion-col>
+      </ion-row>
       <ion-row class="ion-align-items-end">
         <ion-col size="3">
           <!-- <ion-button (click)="onStartNewGame()" fill="clear" *ngIf="!isStarting">
