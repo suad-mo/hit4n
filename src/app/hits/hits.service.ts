@@ -5,6 +5,7 @@ import { HitGame } from './hits.model';
 import * as data from '../../assets/data/top-ten-games';
 import { BehaviorSubject, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { ToastController } from '@ionic/angular';
 
 const TOPTEN: HitGame[] = data.topTenGames as unknown as HitGame[];
 @Injectable({
@@ -14,7 +15,9 @@ export class HitsService {
   private _topTenGames = new BehaviorSubject<HitGame[]>([]);
   private _currentGamer = new BehaviorSubject<string>('New gamer');
 
-  constructor() { }
+  constructor(
+    private toastCtrl: ToastController
+  ) { }
 
   get topTenGames() {
     return this._topTenGames.asObservable();
@@ -36,6 +39,14 @@ export class HitsService {
     this.setGamerAndTopTenGames(currentGamer, this._topTenGames.getValue());
   }
 
+  clearTopTenGames() {
+    this.setGamerAndTopTenGames(this._currentGamer.getValue(), []);
+  }
+
+  onLoadTopTenGames() {
+    this.setGamerAndTopTenGames(this._currentGamer.getValue(), TOPTEN);
+  }
+
   checkGamerAndTopTenGames = async () => {
     const { value } = await Storage.get({ key: 'hit4n' });
     const hit4n = JSON.parse(value) as {
@@ -47,10 +58,10 @@ export class HitsService {
     } else {
       this._currentGamer.next('Guest');
     }
-    if (hit4n && hit4n.topTenGames) {
+    if (hit4n && hit4n.topTenGames && hit4n.topTenGames.length > 0) {
       this._topTenGames.next(hit4n.topTenGames);
     } else {
-      this._topTenGames.next(TOPTEN);
+      this._topTenGames.next([]);
     }
   };
 
