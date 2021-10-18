@@ -26,14 +26,14 @@
     <ion-toggle [(ngModel)]="toogleCheck"></ion-toggle>
   </ion-item>
   <ion-item>
-    <ion-label>Delete top ten games</ion-label>
-    <ion-button (click)="true" fill="clear">
+    <ion-label>Delete top ten games {{ isDelete }}</ion-label>
+    <ion-button (click)="onClearTopTenGames()" fill="clear" [disabled]="!isDelete">
       <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
     </ion-button>
   </ion-item>
   <ion-item>
     <ion-label>Load new top ten games</ion-label>
-    <ion-button (click)="true" fill="clear">
+    <ion-button (click)="onLoadTopTenGames()" fill="clear" [disabled]="!isLoad">
       <ion-icon slot="icon-only" name="download-outline"></ion-icon>
     </ion-button>
   </ion-item>
