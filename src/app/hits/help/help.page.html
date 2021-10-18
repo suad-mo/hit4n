@@ -6,7 +6,7 @@
     </ion-buttons>
   </ion-toolbar>
   <ion-toolbar>
-    <ion-segment value="about">
+    <ion-segment value="about" (ionChange)="onChangeTab($event)" scrollable>
       <ion-segment-button value="about">
         <ion-label>About game</ion-label>
       </ion-segment-button>
@@ -20,6 +20,55 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="ion-padding">
+  <ion-segment [(ngModel)]="segment" scrollable>
+    <ion-segment-button value="first">
+      First
+    </ion-segment-button>
+    <ion-segment-button value="second">
+      Second
+    </ion-segment-button>
+    <ion-segment-button value="third">
+      Three
+    </ion-segment-button>
+    <ion-segment-button value="prvi">
+      Prvi
+    </ion-segment-button>
+    <ion-segment-button value="drugi">
+      Drugi
+    </ion-segment-button>
+    <ion-segment-button value="treci">
+      Treći
+    </ion-segment-button>
+  </ion-segment>
 
+
+  <div [ngSwitch]="segment">
+    <ion-card *ngSwitchCase="'first'">
+      <ion-card-header>
+        First Content
+      </ion-card-header>
+      <ion-card-content>
+        First Content here
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card *ngSwitchCase="'second'">
+      <ion-card-header>
+        Second Header
+      </ion-card-header>
+      <ion-card-content>
+        Second content here
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card *ngSwitchCase="'third'">
+      <ion-card-header>
+        Third Header
+      </ion-card-header>
+      <ion-card-content>
+        Third content
+      </ion-card-content>
+    </ion-card>
+  </div>
 </ion-content>

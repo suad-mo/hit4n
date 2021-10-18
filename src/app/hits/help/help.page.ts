@@ -6,13 +6,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./help.page.scss'],
 })
 export class HelpPage implements OnInit {
+  tab = 'about';
+  segment: string;
 
   constructor() { }
 
   ngOnInit() {
   }
 
-  segmentChanged(data: Event) {
-    console.log(data);
+  onChangeTab(data: any) {
+    console.log(data.detail);
   }
 }
