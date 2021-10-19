@@ -2,17 +2,13 @@ import { createAction, props } from '@ngrx/store';
 import { HitGame } from '../hits.model';
 
 export const loadDataLSStart = createAction(
-  '[Hits] Start Loading Local Storage Data',
-  props<{
-    isLoad: boolean;
-  }>()
+  '[Hits] Start Loading Local Storage Data'
 );
 
 export const loadDataLSSuccesss = createAction(
   '[Hits] Loaded Local Storage Data Success ',
   props<{
-    hitGames: HitGame[];
+    topTenGames: HitGame[];
     gamer: string;
-    isLoading: boolean;
   }>()
 );

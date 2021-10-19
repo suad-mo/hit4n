@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+
 import { HitsService } from './hits/hits.service';
+
+import * as fromApp from './app.reducer';
+import * as HitsActions from './hits/store/hits.actions';
 
 @Component({
   selector: 'app-root',
@@ -7,9 +12,14 @@ import { HitsService } from './hits/hits.service';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  constructor(private hitsService: HitsService) {}
+
+  constructor(
+    private hitsService: HitsService,
+    private store: Store<fromApp.State>
+  ) {}
 
   ngOnInit() {
-    this.hitsService.checkGamerAndTopTenGames();
+    //this.hitsService.checkGamerAndTopTenGames();
+    this.store.dispatch(HitsActions.loadDataLSStart());
   }
 }

@@ -31,7 +31,9 @@ const _hitsReducer = createReducer(
     HitsActions.loadDataLSSuccesss,
     (state) => ({
       ...state,
-      loading: true
+      gamer: state.gamer,
+      topTenGames: [...state.topTenGames],
+      loading: false
     })
   )
 );
@@ -39,3 +41,7 @@ const _hitsReducer = createReducer(
 export function hitsReducer(state: State, action: Action) {
   return _hitsReducer(state, action);
 }
+
+export const getTopTenGames = (state: State) => state.topTenGames ? state.topTenGames : [];
+
+export const getGamer = (state: State) => state.gamer ? state.gamer : 'Guest';
