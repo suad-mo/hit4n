@@ -10,6 +10,8 @@ import { reducers } from './app.reducer';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { environment } from '../environments/environment';
+import { EffectsModule } from '@ngrx/effects';
+import { HitsEffects } from './hits/store/hits.effects';
 
 @NgModule({
   declarations: [AppComponent],
@@ -19,6 +21,7 @@ import { environment } from '../environments/environment';
     IonicModule.forRoot(),
     AppRoutingModule,
     StoreModule.forRoot(reducers),
+    EffectsModule.forRoot([HitsEffects]),
     StoreDevtoolsModule.instrument({ logOnly: environment.production })
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],

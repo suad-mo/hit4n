@@ -20,6 +20,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     //this.hitsService.checkGamerAndTopTenGames();
-    this.store.dispatch(HitsActions.loadDataLSStart());
+    //this.store.dispatch(HitsActions.loadDataLSStart());
   }
 }

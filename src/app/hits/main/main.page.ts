@@ -6,6 +6,10 @@ import { ModalController } from '@ionic/angular';
 import { Observable, Subscription } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 
+import { Store } from '@ngrx/store';
+import * as fromApp from './../../app.reducer';
+import * as fromHits from './../store/hits.reducer';
+
 import { Hit, HitGame } from '../hits.model';
 import { HitsService } from '../hits.service';
 import { NewGameComponent } from './new-game/new-game.component';
@@ -26,10 +30,12 @@ export class MainPage implements OnInit, OnDestroy {
     private modalCtrl: ModalController,
     private hitService: HitsService,
     private router: Router,
+    private store: Store<fromApp.State>
   ) { }
 
   ngOnInit() {
-    this.topTenGames$ = this.hitService.topTenGames;
+    //this.topTenGames$ = this.hitService.topTenGames;
+    this.topTenGames$ = this.store.select(fromApp.getTopTenGames);
     this.currentGamer$ = this.hitService.currentGamer;
   }
 

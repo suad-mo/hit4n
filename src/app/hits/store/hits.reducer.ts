@@ -29,11 +29,40 @@ const _hitsReducer = createReducer(
   ),
   on(
     HitsActions.loadDataLSSuccesss,
+    (state, action) => ({
+      ...state,
+      gamer: action.gamer,
+      topTenGames: [...action.topTenGames],
+      loading: false
+    })
+  ),
+  on(
+    HitsActions.loadDataLSFailed,
     (state) => ({
       ...state,
-      gamer: state.gamer,
-      topTenGames: [...state.topTenGames],
       loading: false
+    })
+  ),
+  on(
+    HitsActions.changeGamer,
+    (state, action) => ({
+      ...state,
+      gamer: action.gamer
+    })
+  ),
+  on(
+    HitsActions.changeTopTenGames,
+    (state, action) => ({
+      ...state,
+      topTenGames: [...action.topTenGames]
+    })
+  ),
+  on(
+    HitsActions.changeAll,
+    (state, action) => ({
+      ...state,
+      topTenGames: [...action.topTenGames],
+      gamer: action.gamer
     })
   )
 );
@@ -44,4 +73,4 @@ export function hitsReducer(state: State, action: Action) {
 
 export const getTopTenGames = (state: State) => state.topTenGames ? state.topTenGames : [];
 
-export const getGamer = (state: State) => state.gamer ? state.gamer : 'Guest';
+export const getGamer = (state: State) => state.gamer ? state.gamer : null;
