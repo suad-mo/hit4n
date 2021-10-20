@@ -1,18 +1,34 @@
+/* eslint-disable arrow-body-style */
 /* eslint-disable @typescript-eslint/member-ordering */
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Storage } from '@capacitor/storage';
+import * as fromApp from '../../app.reducer';
+import * as fromHits from './hits.reducer';
+
 import { from, Observable, of } from 'rxjs';
-import { map, mergeMap, switchMap, tap } from 'rxjs/operators';
+import { map, mergeMap, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import * as HitsActions from './hits.actions';
 
 import { HitGame } from '../hits.model';
 import { Capacitor } from '@capacitor/core';
+import { ThrowStmt } from '@angular/compiler';
+import { State, Store } from '@ngrx/store';
+
+const setHit4n = async (currentGamer: string, topTenGames: HitGame[]) => {
+  const hit4n = {
+    currentGamer,
+    topTenGames,
+  };
+  const strHit4n = JSON.stringify(hit4n);
+  await Storage.set({
+    key: 'hit4n',
+    value: strHit4n,
+  });
+};
 
 @Injectable()
 export class HitsEffects {
-
-
   loadHit4n$ = createEffect(() =>
     this.actions$.pipe(
       ofType(HitsActions.loadDataLSStart),
@@ -35,53 +51,36 @@ export class HitsEffects {
         }
         return HitsActions.loadDataLSSuccesss({
           topTenGames,
-          gamer
+          gamer,
         });
       })
     )
   );
 
-  // changeGamer$ = createEffect(() =>
-  //     this.actions$.pipe(
-  //       ofType(HitsActions.changeGamer),
-  //       switchMap((action) => {
-  //         console.log(action.gamer);
-  //         return { type: 'DUMY'};
-  //       })
-  //     )
-  // );
+  changeLS$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(HitsActions.startChangeLS),
+      switchMap((action) => {
+        return this.store.select('hit4n').pipe(
+          map((data) => {
+            let gamer = data.gamer;
+            let topTenGames = [...data.topTenGames];
+            if (action.gamer !== undefined) {
+              gamer = action.gamer;
+            }
+            if (action.topTenGames !== undefined) {
+              topTenGames = [...action.topTenGames];
+            }
+            setHit4n(gamer, topTenGames);
+            return HitsActions.endChangeLS({
+              gamer,
+              topTenGames,
+            });
+          })
+        );
+      })
+    )
+  );
 
-  constructor(
-    private actions$: Actions
-  ) { }
+  constructor(private actions$: Actions, private store: Store<fromApp.State>) {}
 }
-
-// loadHit4n$ = createEffect(() =>
-//     this.actions$.pipe(
-//       ofType(HitsActions.loadDataLSStart),
-//       tap(() => {
-//         console.log('ajajajajajaj');
-//       }),
-//       map(() => {
-//         const hit4n = JSON.parse(localStorage.getItem('hit4n')) as {
-//           currentGamer: string;
-//           topTenGames: HitGame[];
-//         };
-//         let gamer = 'New gamer';
-//         let topTenGames: HitGame[] = [];
-//         if (!hit4n) {
-//           return { type: 'DUMY' };
-//         }
-//         if (hit4n.currentGamer) {
-//           gamer = hit4n.currentGamer;
-//         }
-//         if (hit4n.topTenGames && hit4n.topTenGames.length > 0) {
-//           topTenGames = [...hit4n.topTenGames];
-//         }
-//         return HitsActions.loadDataLSSuccesss({
-//           topTenGames,
-//           gamer
-//         });
-//       })
-//     )
-//   );

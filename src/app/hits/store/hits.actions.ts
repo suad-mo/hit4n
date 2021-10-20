@@ -17,24 +17,33 @@ export const loadDataLSFailed = createAction(
   '[Storage] Load Failed'
 );
 
-export const changeAll = createAction(
-  '[Storage] Change Currrent Gamer',
+export const startChangeLS = createAction(
+  '[Storage] Start Change Local Storage',
+  props<{
+    gamer?: string;
+    topTenGames?: HitGame[];
+  }>()
+);
+
+export const endChangeLS = createAction(
+  '[Storage End Changes]',
   props<{
     gamer: string;
     topTenGames: HitGame[];
   }>()
 );
+// export const changeGamer = createAction(
+//   '[Storage] Change Currrent Gamer',
+//   props<{
+//     gamer: string;
+//   }>()
+// );
 
-export const changeGamer = createAction(
-  '[Storage] Change Currrent Gamer',
-  props<{
-    gamer: string;
-  }>()
-);
+// export const changeTopTenGames = createAction(
+//   '[Storage] Change Top Ten Games',
+//   props<{
+//     topTenGames: HitGame[];
+//   }>()
+// );
 
-export const changeTopTenGames = createAction(
-  '[Storage] Change Top Ten Games',
-  props<{
-    topTenGames: HitGame[];
-  }>()
-);
+

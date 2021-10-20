@@ -12,3 +12,5 @@ export const reducers: ActionReducerMap<State> = {
 export const getHit4nState = createFeatureSelector<fromHits.State>('hit4n');
 
 export const getTopTenGames = createSelector(getHit4nState, fromHits.getTopTenGames);
+
+export const getGamer = createSelector(getHit4nState, fromHits.getGamer);
