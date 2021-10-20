@@ -4,16 +4,12 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Storage } from '@capacitor/storage';
 import * as fromApp from '../../app.reducer';
-import * as fromHits from './hits.reducer';
-
-import { from, Observable, of } from 'rxjs';
-import { map, mergeMap, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import * as HitsActions from './hits.actions';
 
+import { map, switchMap, take } from 'rxjs/operators';
+
 import { HitGame } from '../hits.model';
-import { Capacitor } from '@capacitor/core';
-import { ThrowStmt } from '@angular/compiler';
-import { State, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 
 const setHit4n = async (currentGamer: string, topTenGames: HitGame[]) => {
   const hit4n = {
@@ -62,6 +58,7 @@ export class HitsEffects {
       ofType(HitsActions.startChangeLS),
       switchMap((action) => {
         return this.store.select('hit4n').pipe(
+          take(1),
           map((data) => {
             let gamer = data.gamer;
             let topTenGames = [...data.topTenGames];
@@ -82,5 +79,8 @@ export class HitsEffects {
     )
   );
 
-  constructor(private actions$: Actions, private store: Store<fromApp.State>) {}
+  constructor(
+    private actions$: Actions,
+    private store: Store<fromApp.State>
+  ) { }
 }

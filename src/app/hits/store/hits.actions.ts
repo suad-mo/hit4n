@@ -1,4 +1,4 @@
-import { createAction, props } from '@ngrx/store';
+import { createAction, createSelector, props } from '@ngrx/store';
 import { HitGame } from '../hits.model';
 
 export const loadDataLSStart = createAction(
@@ -32,18 +32,10 @@ export const endChangeLS = createAction(
     topTenGames: HitGame[];
   }>()
 );
-// export const changeGamer = createAction(
-//   '[Storage] Change Currrent Gamer',
-//   props<{
-//     gamer: string;
-//   }>()
-// );
 
-// export const changeTopTenGames = createAction(
-//   '[Storage] Change Top Ten Games',
-//   props<{
-//     topTenGames: HitGame[];
-//   }>()
-// );
-
-
+export const setIndexGame = createAction(
+  'Set Index Curent Game',
+  props<{
+    index: number;
+  }>()
+);

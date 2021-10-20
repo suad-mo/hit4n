@@ -1,13 +1,15 @@
+/* eslint-disable max-len */
 /* eslint-disable prefer-arrow/prefer-arrow-functions */
 /* eslint-disable no-underscore-dangle */
-import { Hit, HitGame } from '../hits.model';
+import { HitGame } from '../hits.model';
 import { Action, createReducer, on } from '@ngrx/store';
 import * as HitsActions from './hits.actions';
 
 export interface State {
   gamer: string;
-  newGame: Hit;
+  newGame: HitGame;
   topTenGames: HitGame[];
+  index: number;
   loading: boolean;
 }
 
@@ -15,7 +17,9 @@ const initialState: State = {
   gamer: 'Guest',
   newGame: null,
   topTenGames: [],
+  index: -1,
   loading: false,
+
 };
 
 const _hitsReducer = createReducer(
@@ -33,7 +37,8 @@ const _hitsReducer = createReducer(
       ...state,
       gamer: action.gamer,
       topTenGames: [...action.topTenGames],
-      loading: false
+      loading: false,
+      index: -1
     })
   ),
   on(
@@ -47,8 +52,7 @@ const _hitsReducer = createReducer(
     HitsActions.startChangeLS,
     (state, action) => ({
       ...state,
-      gamer: action.gamer ? action.gamer : state.gamer,
-      topTenGames: action.topTenGames ? action.topTenGames : state.topTenGames
+      loading: true
     })
   ),
   on(
@@ -56,7 +60,16 @@ const _hitsReducer = createReducer(
     (state, action) => ({
       ...state,
       gamer: action.gamer,
-      topTenGames: [...action.topTenGames]
+      topTenGames: [...action.topTenGames],
+      loading: false,
+      index: -1
+    })
+  ),
+  on(
+    HitsActions.setIndexGame,
+    (state, action) => ({
+      ...state,
+      index: action.index
     })
   )
 );
@@ -69,26 +82,7 @@ export const getTopTenGames = (state: State) => state.topTenGames ? state.topTen
 
 export const getGamer = (state: State) => state.gamer ? state.gamer : null;
 
-
-
-// on(
-//   HitsActions.changeGamer,
-//   (state, action) => ({
-//     ...state,
-//     gamer: action.gamer
-//   })
-// ),
-// on(
-//   HitsActions.changeTopTenGames,
-//   (state, action) => ({
-//     ...state,
-//     topTenGames: [...action.topTenGames]
-//   })
-// ),
-// on(
-//   HitsActions.changeAll,
-//   (state, action) => ({
-//     ...state,
-//     topTenGames: [...action.topTenGames],
-//     gamer: action.gamer
-//   })
+export const getOneGame = (state: State) =>
+    (state.index >= 0 && state.topTenGames.length > state.index)
+    ? state.topTenGames[state.index]
+    : null;

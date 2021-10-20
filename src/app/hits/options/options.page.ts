@@ -7,9 +7,11 @@ import { Hit, HitGame } from '../hits.model';
 import { HitsService } from '../hits.service';
 import { State, Store } from '@ngrx/store';
 import * as fromHits from '../store/hits.reducer';
-import * as HitAction from '../store/hits.actions';
+import * as HitsAction from '../store/hits.actions';
 import * as fromApp from '../../app.reducer';
+import * as data from '../../../assets/data/top-ten-games';
 
+const TOP_TEN_GAMES: HitGame[] = data.topTenGames as unknown as HitGame[];
 @Component({
   selector: 'app-options',
   templateUrl: './options.page.html',
@@ -17,11 +19,11 @@ import * as fromApp from '../../app.reducer';
 })
 export class OptionsPage implements OnInit, OnDestroy {
   currentGamer$: Observable<string>;
-  topTenGames$ = new Observable<HitGame[]>();
+  topTenGames$: Observable<HitGame[]>;
 
   toogleCheck = false;
-  isDelete = false;
-  isLoad = true;
+  // isDelete = false;
+  // isLoad = true;
 
   private sub: Subscription;
   private sub1: Subscription;
@@ -34,14 +36,7 @@ export class OptionsPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.currentGamer$ = this.store.select(fromApp.getGamer);
-    this.sub1 = this.hitService.topTenGames
-    .pipe(
-      map(games => games.length > 0)
-    )
-    .subscribe(bool => {
-      this.isDelete = bool;
-      this.isLoad = !bool;
-    });
+    this.topTenGames$ = this.store.select(fromApp.getTopTenGames);
   }
 
   onChangeGamer() {
@@ -58,7 +53,7 @@ export class OptionsPage implements OnInit, OnDestroy {
       .then(resData => {
         if (!resData.cancelled && resData.value) {
           // this.hitService.setCurrentGamer(resData.value);
-          this.store.dispatch(HitAction.startChangeLS({
+          this.store.dispatch(HitsAction.startChangeLS({
             gamer: resData.value
           }));
         }
@@ -74,7 +69,7 @@ export class OptionsPage implements OnInit, OnDestroy {
     console.log('Cancelled:', cancelled);
 
     if (value && !cancelled) {
-      this.store.dispatch(HitAction.startChangeLS({
+      this.store.dispatch(HitsAction.startChangeLS({
         gamer: value
       }));
     }
@@ -82,7 +77,7 @@ export class OptionsPage implements OnInit, OnDestroy {
 
   onClearTopTenGames() {
     this.presentAlertConfirm()
-      .then(() => this.isDelete = false);
+      .then(() => console.log('Start Clear....'));
   }
 
   async presentAlertConfirm() {
@@ -98,7 +93,9 @@ export class OptionsPage implements OnInit, OnDestroy {
         }, {
           text: 'Ok',
           handler: () => {
-            this.hitService.clearTopTenGames();
+            this.store.dispatch(HitsAction.startChangeLS({
+              topTenGames: []
+            }));
           }
         }
       ]
@@ -108,8 +105,9 @@ export class OptionsPage implements OnInit, OnDestroy {
   }
 
   onLoadTopTenGames() {
-    this.hitService.onLoadTopTenGames();
-    this.isLoad = false;
+    this.store.dispatch(HitsAction.startChangeLS({
+      topTenGames: TOP_TEN_GAMES
+    }));
   }
 
   ngOnDestroy() {

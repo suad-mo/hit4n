@@ -9,6 +9,7 @@ import { map, switchMap, tap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import * as fromApp from './../../app.reducer';
 import * as fromHits from './../store/hits.reducer';
+import * as HitsAction from './../store/hits.actions';
 
 import { Hit, HitGame } from '../hits.model';
 import { HitsService } from '../hits.service';
@@ -36,7 +37,7 @@ export class MainPage implements OnInit, OnDestroy {
   ngOnInit() {
     //this.topTenGames$ = this.hitService.topTenGames;
     this.topTenGames$ = this.store.select(fromApp.getTopTenGames);
-    this.currentGamer$ = this.hitService.currentGamer;
+    this.currentGamer$ = this.store.select(fromApp.getGamer);
   }
 
   onOpenNewGame() {
@@ -86,7 +87,10 @@ export class MainPage implements OnInit, OnDestroy {
             this.lastGameIndex = topTenG.findIndex(hitGame =>
               hitGame.duration === resData.data.duration
             );
-            this.hitService.setTopTenGames([...topTenG]);
+            // this.hitService.setTopTenGames([...topTenG]);
+            this.store.dispatch(HitsAction.startChangeLS({
+              topTenGames: [...topTenG]
+            }));
           }
         }
       });

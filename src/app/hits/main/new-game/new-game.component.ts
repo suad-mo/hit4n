@@ -22,7 +22,6 @@ export class NewGameComponent implements OnInit {
 
   onStartNewGame() {
     this.newGame = new HitGame(this.gamer);
-    console.log(this.newGame.xxxx);
     this.isStarting = true;
     this.isKeyboard = true;
     this.xxxx = this.newGame.xxxx;
