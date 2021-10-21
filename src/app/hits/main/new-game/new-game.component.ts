@@ -2,6 +2,10 @@
 import { Component, Input, OnInit, Output } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Hit, HitGame } from '../../hits.model';
+import { Store } from '@ngrx/store';
+import * as fromMain from '../store/main.reducer';
+import * as MainActions from '../store/main.actions';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-new-game',
@@ -16,11 +20,23 @@ export class NewGameComponent implements OnInit {
   isStarting = false;
   isKeyboard = false;
 
-  constructor(private modalCtrl: ModalController) {}
+  newGame$: Observable<HitGame> = this.store.select(fromMain.getNewGame);
+  xxxx$: Observable<number[]> = this.store.select(fromMain.getXxxx);
+  aaaa$: Observable<number[]> = this.store.select(fromMain.getAaaa);
+  n$: Observable<boolean> = this.store.select(fromMain.getIsFinish);
+
+
+  constructor(
+    private modalCtrl: ModalController,
+    private store: Store<fromMain.State>
+  ) {}
 
   ngOnInit() {}
 
   onStartNewGame() {
+    this.store.dispatch(MainActions.startNewGame({
+      gamer: this.gamer
+    }));
     this.newGame = new HitGame(this.gamer);
     this.isStarting = true;
     this.isKeyboard = true;

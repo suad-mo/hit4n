@@ -8,15 +8,23 @@ export const startNewGame = createAction(
 );
 
 export const add4Number = createAction(
-  '[Main] Add new 4 numbers',
+  '[Main] Add New 4 Numbers',
   props<{
     nums: number[];
   }>()
 );
 
+export const cancel4Number = createAction(
+  '[Main] Cancel Enter Numbers'
+);
+
 export const enterNumber = createAction(
-  '[Main] Enter number',
+  '[Main] Enter One Number',
   props<{
     num: number;
   }>()
+);
+
+export const cancelNewGame = createAction(
+  '[Main] Cancel New Game'
 );
