@@ -14,17 +14,16 @@ import { Observable } from 'rxjs';
   styleUrls: ['./new-game.component.scss'],
 })
 export class NewGameComponent implements OnInit {
-  @Output() newGame: HitGame;
-  @Output() xxxx: number[] = [];
-  //@Input() gamer: string;
-  currentEnterNums: number[];
   isStarting = false;
   isKeyboard = false;
 
-  game$: Observable<HitGame> = this.store.select(fromMain.getGame);
+  game: HitGame;
+  aaaa: number[];
+
   xxxx$: Observable<number[]> = this.store.select(fromMain.getXxxx);
   aaaa$: Observable<number[]> = this.store.select(fromMain.getAaaa);
   n$: Observable<boolean> = this.store.select(fromMain.getIsFinish);
+
   gamer$: Observable<string> = this.storeApp.select(fromApp.getGamer);
 
 
@@ -48,30 +47,37 @@ export class NewGameComponent implements OnInit {
   // }
 
   onStartGame(gamer: string) {
+    this.game = new HitGame(gamer);
+    console.log(this.game.xxxx);
     this.store.dispatch(MainActions.startGame({
-      gamer
+      game: this.game
     }));
     this.isStarting = true;
     this.isKeyboard = true;
   }
 
   onCancel() {
-    if (this.newGame) {
-      this.modalCtrl.dismiss(this.newGame, 'cancel');
+    if (this.game) {
+      this.modalCtrl.dismiss(this.game, 'cancel');
     }
     this.modalCtrl.dismiss(null, 'cancel');
   }
 
   onNewNumbers(nums: number[]) {
-    this.currentEnterNums = [...nums];
+    this.aaaa = [...nums];
+    this.store.dispatch(MainActions.addHit({
+      nums
+    }));
   }
 
   onFinishEnterNumbers() {
-    if (this.currentEnterNums.length === 4) {
-      this.newGame.addHit(this.currentEnterNums);
-      this.currentEnterNums = [];
-      if (this.newGame.isBingo) {
-        this.modalCtrl.dismiss(this.newGame, 'success');
+    if (this.aaaa.length === 4) {
+      const g = this.game;
+      g.addHit(this.aaaa);
+      this.game = g;
+      this.aaaa = [];
+      if (this.game.isBingo) {
+        this.modalCtrl.dismiss(this.game, 'success');
         this.isKeyboard = false;
       }
     }

@@ -21,12 +21,14 @@ export class KeyboardComponent implements OnInit {
   @Output('hint')
   public hint: EventEmitter<number> = new EventEmitter();
 
+  @Input('game')
+  public game: HitGame;
   @Input('hits')
   public hits: Hit[];
   @Input('xxxx')
   public xxxx: number[];
 
-  public nums: number[] = [];
+  public aaaa: number[] = [];
   public total = 0;
 
   isOdabran: boolean[] = [false, false, false, false, false, false, false, false, false, false];
@@ -35,10 +37,6 @@ export class KeyboardComponent implements OnInit {
   keyboard$: Observable<boolean[]> = this.store.select(fromMain.getKeyboard);
   xxxx$: Observable<number[]> = this.store.select(fromMain.getXxxx);
   aaaa$: Observable<number[]> = this.store.select(fromMain.getAaaa);
-  //game$: Observable<HitGame> = this.store.select(fromMain.getGame);
-
-  game: HitGame = null;
-  private subGame: Subscription;
 
   constructor(
     private store: Store<fromMain.State>
@@ -51,61 +49,67 @@ export class KeyboardComponent implements OnInit {
   }
 
   // onSelectNumber(n: number) {
-  //   if (this.total >= 4) {
+  //   if (this.aaaa.length >= 4) {
   //     return;
   //   }
-  //   this.total++;
-  //   this.nums.push(n);
-  //   this.isOdabran[n]=true;
-  //   this.newEnterNumber.emit(this.nums);
+  //   this.aaaa.push(n);
+  //   this.newEnterNumber.emit(this.aaaa);
   // }
 
   onEnterNumber(n: number) {
+    if (this.aaaa.length >= 4) {
+      return;
+    }
+    const a = [...this.aaaa];
+    a.push(n);
+    this.aaaa = [...a];
+    this.isOdabran[n] = true;
+    this.newEnterNumber.emit(this.aaaa);
     this.store.dispatch(MainActions.enterNumber({
       num: n
     }));
   }
 
-  // onOk() {
-  //   this.finishEnterNumber.emit();
-  //   this.isOdabran = [false, false, false, false, false, false, false, false, false, false];
-  //   this.total = 0;
-  //   this.nums = [];
-  // }
-
-  onOky(nums: number[]) {
-    if (nums.length === 4) {
-      this.game.addHit(nums);
-      this.store.dispatch(MainActions.updateGame({
-        updateGame: this.game
-      }));
-    }
-    this.store.dispatch(MainActions.addHit({
-      nums
-    }));
+  onOk() {
+    this.finishEnterNumber.emit();
+    this.isOdabran = [false, false, false, false, false, false, false, false, false, false];
+    this.aaaa = [];
   }
 
-  // onCancel() {
-  //   this.isOdabran = [false, false, false, false, false, false, false, false, false, false];
-  //   this.total = 0;
-  //   this.nums = [];
-  //   this.newEnterNumber.emit(this.nums);
+  // onOky(nums: number[]) {
+  //   if (nums.length === 4) {
+  //     this.game.addHit(nums);
+  //     this.store.dispatch(MainActions.updateGame({
+  //       updateGame: this.game
+  //     }));
+  //   }
+  //   this.store.dispatch(MainActions.addHit({
+  //     nums
+  //   }));
   // }
 
   onCancel() {
+    this.isOdabran = [false, false, false, false, false, false, false, false, false, false];
+    this.total = 0;
+    this.aaaa = [];
+    this.newEnterNumber.emit(this.aaaa);
     this.store.dispatch(MainActions.cancelHit());
   }
+
+  // onCancel() {
+  //   this.store.dispatch(MainActions.cancelHit());
+  // }
 
   onHint() {
     if (this.total >= 4) {
       return;
     }
     const n = this.xxxx[this.total];
-    this.nums.push(n);
+    this.aaaa.push(n);
     this.isOdabran[n] = true;
     this.total++;
     this.isHint = false;
-    this.newEnterNumber.emit(this.nums);
+    this.newEnterNumber.emit(this.aaaa);
   }
 
 }

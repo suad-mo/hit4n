@@ -4,7 +4,7 @@ import { HitGame } from '../../hits.model';
 export const startGame = createAction(
   '[Main] Set New Game',
   props<{
-    gamer: string;
+    game: HitGame;
   }>()
 );
 

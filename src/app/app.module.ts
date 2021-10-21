@@ -20,7 +20,12 @@ import { HitsEffects } from './hits/store/hits.effects';
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
-    StoreModule.forRoot(reducers),
+    StoreModule.forRoot(reducers, {
+      runtimeChecks: {
+        strictStateImmutability: false,
+        strictActionImmutability: false,
+      },
+    }),
     EffectsModule.forRoot([HitsEffects]),
     StoreDevtoolsModule.instrument({ logOnly: environment.production })
   ],

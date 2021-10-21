@@ -39,7 +39,7 @@ const initialState: mainState = {
 const _mainReducer = createReducer(
   initialState,
   on(MainAction.startGame, (state, action) => {
-    const newGame = new HitGame(action.gamer);
+    const newGame = action.game;
     const xxxx = newGame.xxxx;
     return {
       ...state,
