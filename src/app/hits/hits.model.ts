@@ -25,6 +25,18 @@ export class HitGame {
     this.generateXXXX();
   }
 
+  public getClone(){
+    return {
+      gamer: this.gamer,
+      _xxxx: this._xxxx,
+      hits: this.hits,
+      isFinish: this.isFinish,
+      start: this.start,
+      end: this.end,
+      isBingo: this.end,
+      duration: this.duration
+    };
+  }
   public get xxxx() {
     return this._xxxx.slice();
   }
@@ -38,6 +50,9 @@ export class HitGame {
   }
 
   public addHit(nums: number[]) {
+    if (nums.length < 4) {
+      return;
+    }
     const aaa: {
       a: number;
       p: boolean;

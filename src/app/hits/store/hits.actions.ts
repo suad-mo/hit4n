@@ -39,3 +39,10 @@ export const setIndexGame = createAction(
     index: number;
   }>()
 );
+
+export const addNewGameInTopTen = createAction(
+  '[Storage] Add New Game In Top Ten',
+  props<{
+    newGame: HitGame;
+  }>()
+);
