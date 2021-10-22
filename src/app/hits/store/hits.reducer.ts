@@ -36,7 +36,7 @@ const _hitsReducer = createReducer(
     (state, action) => ({
       ...state,
       gamer: action.gamer,
-      topTenGames: [...action.topTenGames],
+      topTenGames: action.topTenGames ? action.topTenGames : [...state.topTenGames],
       loading: false,
       index: -1
     })

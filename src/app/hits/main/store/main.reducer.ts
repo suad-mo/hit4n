@@ -95,43 +95,27 @@ const _mainReducer = createReducer(
   // ),
 
   on(MainAction.addOneNumber, (state, action) => {
+    const game = state.game;
     let aaaa = [...state.aaaa];
-    let keyboard = [];
+    let keyboard = [...state.keyboard];
+    let isFinish = state.isFinish;
     if (aaaa.length < 4) {
       aaaa.push(action.num);//update aaaa
-      keyboard = [...state.keyboard];
       keyboard[action.num] = true;//update keyboard
-      if (aaaa.length < 4) {
-        console.log('manje od 4');
-        return {
-          ...state,
-          aaaa,
-          keyboard,
-        };
-      } else {
-        const game = state.game;
+      if (aaaa.length === 4) {
         game.addHit(aaaa);
         aaaa = initialState.aaaa;
         keyboard = initialState.keyboard;
-        const isFinsh = game.isBingo;
-        if (!isFinsh) {
-          return {
-            ...state,
-            game,
-            aaaa,
-            keyboard,
-          };
-        } else {
-          return {
-            ...state,
-            game,
-            isFinish: true,
-            aaaa,
-            keyboard,
-          };
-        }
+        isFinish = game.isBingo;
       }
     }
+    return {
+      ...state,
+      game,
+      isFinish: true,
+      aaaa,
+      keyboard,
+    };
   }),
   on(MainAction.updateAaaa, (state, action) => {
     const aaaa = [...state.aaaa];
@@ -163,6 +147,10 @@ export const getMainState = createFeatureSelector<mainState>('main');
 export const getGame = createSelector(
   getMainState,
   (state: mainState) => state.game
+);
+export const getIsBingo = createSelector(
+  getMainState,
+  (state: mainState) => state.game.isBingo
 );
 export const getAaaa = createSelector(
   getMainState,

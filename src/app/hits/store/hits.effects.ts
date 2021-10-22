@@ -6,7 +6,7 @@ import { Storage } from '@capacitor/storage';
 import * as fromApp from '../../app.reducer';
 import * as HitsActions from './hits.actions';
 
-import { map, switchMap, take } from 'rxjs/operators';
+import { map, switchMap, take, tap } from 'rxjs/operators';
 
 import { HitGame } from '../hits.model';
 import { Store } from '@ngrx/store';
@@ -30,24 +30,27 @@ export class HitsEffects {
       ofType(HitsActions.loadDataLSStart),
       switchMap(async () => {
         const { value } = await Storage.get({ key: 'hit4n' });
-        const hit4n = JSON.parse(value) as {
+        const hit4n = JSON.parse(value) as unknown as {
           currentGamer: string;
           topTenGames: HitGame[];
         };
         if (!hit4n) {
           return HitsActions.loadDataLSFailed();
         }
-        let gamer = 'New gamer';
-        if (hit4n.currentGamer) {
-          gamer = hit4n.currentGamer;
-        }
-        let topTenGames: HitGame[] = [];
-        if (hit4n.topTenGames && hit4n.topTenGames.length > 0) {
-          topTenGames = [...hit4n.topTenGames];
-        }
+        const gamer = hit4n.currentGamer;
+        // if (hit4n.currentGamer) {
+        //   gamer = hit4n.currentGamer;
+        // }
+        const topTenGames = hit4n.topTenGames as HitGame[];
+        console.log('hit4n...', hit4n);
+        console.log('Current Gamer...', gamer);
+        // if (hit4n.topTenGames && hit4n.topTenGames.length > 0) {
+        //   topTenGames = [...hit4n.topTenGames];
+        // }
+        console.log('Tpten games...', topTenGames);
         return HitsActions.loadDataLSSuccesss({
           topTenGames,
-          gamer,
+          gamer
         });
       })
     )
@@ -69,6 +72,10 @@ export class HitsEffects {
               topTenGames = [...action.topTenGames];
             }
             setHit4n(gamer, topTenGames);
+            // this.store.dispatch(HitsActions.endChangeLS({
+            //   gamer,
+            //   topTenGames
+            // }));
             return HitsActions.endChangeLS({
               gamer,
               topTenGames,
@@ -84,6 +91,7 @@ export class HitsEffects {
       ofType(HitsActions.addNewGameInTopTen),
       switchMap((action) => {
         return this.store.select(fromApp.getTopTenGames).pipe(
+          take(1),
           map(data => {
             const topTenGames = [...data];
             let isUpdateTopTen = false;

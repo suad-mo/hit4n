@@ -1,8 +1,8 @@
-<ion-header>
-  <ion-toolbar *ngIf="(gamer$ | async) as gamer">
+<ion-header *ngIf="(gamer$ | async) as gamer">
+  <ion-toolbar>
     <ion-title>{{ gamer }}</ion-title>
     <ion-buttons [slot]="'end'">
-      <ion-button (click)="onCancel()">
+      <ion-button (click)="onCancel()" *ngIf="isStarting">
         <ion-icon name="close"></ion-icon>
       </ion-button>
       <ion-button (click)="onStartGame(gamer)" fill="clear" *ngIf="!isStarting">
@@ -13,19 +13,19 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <div class="ap" *ngIf="(game$|async) as game">
+  <ion-grid>
     <ion-grid fixed>
-      <div *ngIf="(gamer$ | async) as gamer">
-        <ion-row *ngIf="!isStarting" style="margin-top: 200px;" class="ion-text-center">
-          <ion-col size="12">
-            <ion-button (click)="onStartGame(gamer)">
-              <ion-icon slot="start" name="add"></ion-icon>
-              Start...
-            </ion-button>
-          </ion-col>
-        </ion-row>
-      </div>
-      <ion-row *ngFor="let h of game?.hits; index as i" color="success">
+      <!-- <div>
+          <ion-row *ngIf="!isStarting" style="margin-top: 200px;" class="ion-text-center">
+            <ion-col size="12">
+              <ion-button (click)="onStartGame(gamer)">
+                <ion-icon slot="start" name="add"></ion-icon>
+                Start...
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </div> -->
+      <ion-row *ngFor="let h of (game$ | async)?.hits; index as i" color="success">
         <ion-col size="1" offset="1">
           <ion-chip color="primary">
             <ion-label color="primary">{{ i + 1 }}.</ion-label>
@@ -58,17 +58,24 @@
           </ion-chip>
         </ion-col>
       </ion-row>
-      <ion-row *ngIf="game.isBingo">
+
+      <ion-row *ngIf="(game$ | async)?.isBingo === true">
         <ion-col size="12">
           <ion-title>Bingo</ion-title>
         </ion-col>
       </ion-row>
+      <ion-row *ngIf="(game$ | async)?.isBingo === true">
+        <ion-col>
+          <ion-button *ngIf="(game$ | async) as g" (click)="onFinish(g)">
+            <ion-icon slot="start" name="add"></ion-icon>
+            Start...
+          </ion-button>
+        </ion-col>
+      </ion-row>
     </ion-grid>
-  </div>
+  </ion-grid>
 </ion-content>
 
 <ion-footer>
-  <app-keyboard
-    *ngIf="true"
-  ></app-keyboard>
+  <app-keyboard *ngIf="isStarting && (game$ | async)?.isBingo !== true"></app-keyboard>
 </ion-footer>

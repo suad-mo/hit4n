@@ -10,6 +10,7 @@ import { Store } from '@ngrx/store';
 import * as fromApp from './../../app.reducer';
 import * as fromHits from './../store/hits.reducer';
 import * as HitsAction from './../store/hits.actions';
+import * as fromMain from './store/main.reducer';
 
 import { Hit, HitGame } from '../hits.model';
 import { HitsService } from '../hits.service';
@@ -32,7 +33,7 @@ export class MainPage implements OnInit, OnDestroy {
     private hitService: HitsService,
     private router: Router,
     private store: Store<fromApp.State>
-  ) {}
+  ) { }
 
   ngOnInit() {
     //this.topTenGames$ = this.hitService.topTenGames;
@@ -57,9 +58,12 @@ export class MainPage implements OnInit, OnDestroy {
         modalEl.present();
         return modalEl.onDidDismiss();
       })
-      .then((resData) => {
+      .then(async (resData) => {
         if (resData.role === 'success') {
           console.log('Success...');
+          await this.store.dispatch(HitsAction.addNewGameInTopTen({
+            newGame: resData.data
+          }));
         } else {
           console.log('Cancel...');
         }

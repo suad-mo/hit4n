@@ -7,6 +7,7 @@ import * as fromApp from '../../../app.reducer';
 import * as fromMain from '../store/main.reducer';
 import * as MainActions from '../store/main.actions';
 import { Observable } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-new-game',
@@ -30,7 +31,7 @@ export class NewGameComponent implements OnInit {
     private modalCtrl: ModalController,
     private store: Store<fromMain.State>,
     private storeApp: Store<fromApp.State>
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.game$ = this.store.select(fromMain.getGame);
@@ -39,9 +40,10 @@ export class NewGameComponent implements OnInit {
     this.isFinish$ = this.store.select(fromMain.getIsFinish);
   }
 
-  onStartGame(gamer: string) {
+  async onStartGame(gamer: string) {
     this.isStarting = true;
-    this.store.dispatch(
+    this.isKeyboard = true;
+    await this.store.dispatch(
       MainActions.startGame({
         gamer
       })
@@ -60,6 +62,11 @@ export class NewGameComponent implements OnInit {
     );
   }
 
+  onFinish(game: HitGame) {
+    this.modalCtrl.dismiss(game, 'success');
+  }
+}
+
   // onFinishEnterNumbers() {
   //   if (this.aaaa.length === 4) {
   //     const g = this.game;
@@ -72,4 +79,5 @@ export class NewGameComponent implements OnInit {
   //     }
   //   }
   // }
-}
+
+
