@@ -4,7 +4,7 @@ import { HitGame } from '../../hits.model';
 export const startGame = createAction(
   '[Main] Set New Game',
   props<{
-    game: HitGame;
+    gamer: string;
   }>()
 );
 
@@ -26,8 +26,15 @@ export const cancelHit = createAction(
   '[Main] Cancel Enter Numbers'
 );
 
-export const enterNumber = createAction(
+export const addOneNumber = createAction(
   '[Main] Enter One Number',
+  props<{
+    num: number;
+  }>()
+);
+
+export const updateAaaa = createAction(
+  '[Main] Update Aaaa props',
   props<{
     num: number;
   }>()

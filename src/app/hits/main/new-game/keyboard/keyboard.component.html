@@ -1,4 +1,4 @@
-<ion-grid fixed>
+<ion-grid fixed *ngIf="(keyboard$|async) as isOdabran">
   <ion-row>
     <ion-col size="2" offset="2" class="ion-text-center">
       <ion-button
@@ -62,15 +62,15 @@
       </ion-button>
     </ion-col>
     <ion-col size="4">
-      <ion-button
+      <!-- <ion-button
         *ngIf="isHint"
         (click)="onHint()"
         expand="block" shape="round" color="primary">Hint
-      </ion-button>
+      </ion-button> -->
     </ion-col>
     <ion-col size="4">
       <ion-button
-        (click)="onOk()" expand="block" shape="round" color="primary" [disabled]="aaaa.length < 4">Ok
+        (click)="onOk()" expand="block" shape="round" color="primary" [disabled]="(aaaa$|async).length < 4">Ok
       </ion-button>
     </ion-col>
   </ion-row>

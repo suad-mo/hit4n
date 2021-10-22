@@ -23,7 +23,7 @@ import { NewGameComponent } from './new-game/new-game.component';
 export class MainPage implements OnInit, OnDestroy {
   lastGameIndex: number;
   topTenGames$ = new Observable<HitGame[]>();
-  currentGamer$ = new Observable<string>();
+  gamer$ = new Observable<string>();
 
   private sub: Subscription;
 
@@ -32,12 +32,12 @@ export class MainPage implements OnInit, OnDestroy {
     private hitService: HitsService,
     private router: Router,
     private store: Store<fromApp.State>
-  ) { }
+  ) {}
 
   ngOnInit() {
     //this.topTenGames$ = this.hitService.topTenGames;
     this.topTenGames$ = this.store.select(fromApp.getTopTenGames);
-    this.currentGamer$ = this.store.select(fromApp.getGamer);
+    this.gamer$ = this.store.select(fromApp.getGamer);
   }
 
   onOpenNewGame() {
@@ -48,50 +48,20 @@ export class MainPage implements OnInit, OnDestroy {
   private openNewGameModal() {
     let currentGamer: string;
     let topTenGames: HitGame[];
-    this.sub = this.currentGamer$.pipe(
-      switchMap(gamer => {
-        currentGamer = gamer;
-        return this.topTenGames$;
-      }))
-      .subscribe(topGames => {
-        topTenGames = topGames
-      });
     this.modalCtrl
       .create({
         component: NewGameComponent,
-        componentProps: {
-          gamer: currentGamer
-        },
-        animated: true
+        animated: true,
       })
-      .then(modalEl => {
+      .then((modalEl) => {
         modalEl.present();
         return modalEl.onDidDismiss();
       })
-      .then(resData => {
+      .then((resData) => {
         if (resData.role === 'success') {
-          const topTenG = [...topTenGames];
-          let isUpdateTopTen = false;
-          if (topTenG.length <= 9) {
-            topTenG.push(resData.data);
-            topTenG.sort((a, b) => a.duration - b.duration);
-            isUpdateTopTen = true;
-          } else {
-            if (topTenG[9].duration > resData.data.duration) {
-              topTenG[9] = resData.data;
-              topTenG.sort((a, b) => a.duration - b.duration);
-              isUpdateTopTen = true;
-            }
-          }
-          if (isUpdateTopTen) {
-            this.lastGameIndex = topTenG.findIndex(hitGame =>
-              hitGame.duration === resData.data.duration
-            );
-            // this.hitService.setTopTenGames([...topTenG]);
-            this.store.dispatch(HitsAction.startChangeLS({
-              topTenGames: [...topTenG]
-            }));
-          }
+          console.log('Success...');
+        } else {
+          console.log('Cancel...');
         }
       });
   }
@@ -106,4 +76,3 @@ export class MainPage implements OnInit, OnDestroy {
     }
   }
 }
-

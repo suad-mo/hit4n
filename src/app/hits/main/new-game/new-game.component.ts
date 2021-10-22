@@ -17,15 +17,14 @@ export class NewGameComponent implements OnInit {
   isStarting = false;
   isKeyboard = false;
 
-  game: HitGame;
-  aaaa: number[];
+  initGame: HitGame;
 
-  xxxx$: Observable<number[]> = this.store.select(fromMain.getXxxx);
-  aaaa$: Observable<number[]> = this.store.select(fromMain.getAaaa);
-  n$: Observable<boolean> = this.store.select(fromMain.getIsFinish);
+  game$: Observable<HitGame>;
+  xxxx$: Observable<number[]>;
+  aaaa$: Observable<number[]>;
+  isFinish$: Observable<boolean>;
 
   gamer$: Observable<string> = this.storeApp.select(fromApp.getGamer);
-
 
   constructor(
     private modalCtrl: ModalController,
@@ -33,53 +32,44 @@ export class NewGameComponent implements OnInit {
     private storeApp: Store<fromApp.State>
   ) {}
 
-  ngOnInit() {}
-
-  // onStartNewGame() {
-  //   this.store.dispatch(MainActions.startGame({
-  //     gamer: this.gamer
-  //   }));
-  //   this.newGame = new HitGame(this.gamer);
-  //   this.isStarting = true;
-  //   this.isKeyboard = true;
-  //   this.xxxx = this.newGame.xxxx;
-  //   console.log(this.xxxx);
-  // }
+  ngOnInit() {
+    this.game$ = this.store.select(fromMain.getGame);
+    this.xxxx$ = this.store.select(fromMain.getXxxx);
+    this.aaaa$ = this.store.select(fromMain.getAaaa);
+    this.isFinish$ = this.store.select(fromMain.getIsFinish);
+  }
 
   onStartGame(gamer: string) {
-    this.game = new HitGame(gamer);
-    console.log(this.game.xxxx);
-    this.store.dispatch(MainActions.startGame({
-      game: this.game
-    }));
     this.isStarting = true;
-    this.isKeyboard = true;
+    this.store.dispatch(
+      MainActions.startGame({
+        gamer
+      })
+    );
   }
 
   onCancel() {
-    if (this.game) {
-      this.modalCtrl.dismiss(this.game, 'cancel');
-    }
     this.modalCtrl.dismiss(null, 'cancel');
   }
 
   onNewNumbers(nums: number[]) {
-    this.aaaa = [...nums];
-    this.store.dispatch(MainActions.addHit({
-      nums
-    }));
+    this.store.dispatch(
+      MainActions.addHit({
+        nums,
+      })
+    );
   }
 
-  onFinishEnterNumbers() {
-    if (this.aaaa.length === 4) {
-      const g = this.game;
-      g.addHit(this.aaaa);
-      this.game = g;
-      this.aaaa = [];
-      if (this.game.isBingo) {
-        this.modalCtrl.dismiss(this.game, 'success');
-        this.isKeyboard = false;
-      }
-    }
-  }
+  // onFinishEnterNumbers() {
+  //   if (this.aaaa.length === 4) {
+  //     const g = this.game;
+  //     g.addHit(this.aaaa);
+  //     this.game = g;
+  //     this.aaaa = [];
+  //     if (this.game.isBingo) {
+  //       this.modalCtrl.dismiss(this.game, 'success');
+  //       this.isKeyboard = false;
+  //     }
+  //   }
+  // }
 }

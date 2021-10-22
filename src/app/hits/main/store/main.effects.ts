@@ -7,25 +7,26 @@ import * as fromApp from '../../../app.reducer';
 import * as fromMain from './main.reducer';
 import * as MainActions from './main.actions';
 import * as HitsAction from '../../store/hits.actions';
+import { from } from 'rxjs';
 
 @Injectable()
 export class MainEffcts {
-
   endGame$ = createEffect(() =>
     this.actions$.pipe(
       ofType(MainActions.endGame),
-      switchMap(async (actions) => HitsAction.addNewGameInTopTen({
-          newGame: actions.finishedGame
-        }))
+      switchMap(async (actions) =>
+        HitsAction.addNewGameInTopTen({
+          newGame: actions.finishedGame,
+        })
+      )
     )
   );
 
-  // addHit$ = createEffect(() =>
+  // addOneNumber$ = createEffect(() =>
   //   this.actions$.pipe(
-  //     ofType(MainActions.addHit),
-  //     switchMap((action) =>)
-  //   )
-  // );
+  //     ofType(MainActions.addOneNumber),
+  //     switchMap((action) => ))
+  // ));
 
   constructor(
     private actions$: Actions,

@@ -14,66 +14,30 @@ import { Observable, Subscription } from 'rxjs';
   styleUrls: ['./keyboard.component.scss'],
 })
 export class KeyboardComponent implements OnInit {
-  @Output('newEnterNumber')
-  public newEnterNumber: EventEmitter<number[]> = new EventEmitter();
-  @Output('finishEnterNumber')
-  public finishEnterNumber: EventEmitter<void> = new EventEmitter();
-  @Output('hint')
-  public hint: EventEmitter<number> = new EventEmitter();
-
-  @Input('game')
-  public game: HitGame;
-  @Input('hits')
-  public hits: Hit[];
-  @Input('xxxx')
-  public xxxx: number[];
-
-  public aaaa: number[] = [];
-  public total = 0;
-
-  isOdabran: boolean[] = [false, false, false, false, false, false, false, false, false, false];
-  isHint = true;
 
   keyboard$: Observable<boolean[]> = this.store.select(fromMain.getKeyboard);
   xxxx$: Observable<number[]> = this.store.select(fromMain.getXxxx);
   aaaa$: Observable<number[]> = this.store.select(fromMain.getAaaa);
+  isFinish$: Observable<boolean> = this.store.select(fromMain.getIsFinish);
 
   constructor(
     private store: Store<fromMain.State>
   ) { }
 
   ngOnInit() {
-    this.store.select(fromMain.getGame).subscribe(data => {
-      this.game = data;
-    });
+
   }
 
-  // onSelectNumber(n: number) {
-  //   if (this.aaaa.length >= 4) {
-  //     return;
-  //   }
-  //   this.aaaa.push(n);
-  //   this.newEnterNumber.emit(this.aaaa);
-  // }
-
-  onEnterNumber(n: number) {
-    if (this.aaaa.length >= 4) {
-      return;
-    }
-    const a = [...this.aaaa];
-    a.push(n);
-    this.aaaa = [...a];
-    this.isOdabran[n] = true;
-    this.newEnterNumber.emit(this.aaaa);
-    this.store.dispatch(MainActions.enterNumber({
-      num: n
+  onEnterNumber(num: number) {
+    this.store.dispatch(MainActions.addOneNumber({
+      num
     }));
   }
 
   onOk() {
-    this.finishEnterNumber.emit();
-    this.isOdabran = [false, false, false, false, false, false, false, false, false, false];
-    this.aaaa = [];
+    // this.finishEnterNumber.emit();
+    // this.isOdabran = [false, false, false, false, false, false, false, false, false, false];
+    // this.aaaa = [];
   }
 
   // onOky(nums: number[]) {
@@ -89,10 +53,6 @@ export class KeyboardComponent implements OnInit {
   // }
 
   onCancel() {
-    this.isOdabran = [false, false, false, false, false, false, false, false, false, false];
-    this.total = 0;
-    this.aaaa = [];
-    this.newEnterNumber.emit(this.aaaa);
     this.store.dispatch(MainActions.cancelHit());
   }
 
@@ -101,15 +61,15 @@ export class KeyboardComponent implements OnInit {
   // }
 
   onHint() {
-    if (this.total >= 4) {
-      return;
-    }
-    const n = this.xxxx[this.total];
-    this.aaaa.push(n);
-    this.isOdabran[n] = true;
-    this.total++;
-    this.isHint = false;
-    this.newEnterNumber.emit(this.aaaa);
+    // if (this.total >= 4) {
+    //   return;
+    // }
+    // const n = this.xxxx[this.total];
+    // this.aaaa.push(n);
+    // this.isOdabran[n] = true;
+    // this.total++;
+    // this.isHint = false;
+    // this.newEnterNumber.emit(this.aaaa);
   }
 
 }
