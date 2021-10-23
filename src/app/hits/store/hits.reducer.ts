@@ -10,6 +10,7 @@ export interface State {
   newGame: HitGame;
   topTenGames: HitGame[];
   index: number;
+  lastIndex: number;
   loading: boolean;
 }
 
@@ -18,6 +19,7 @@ const initialState: State = {
   newGame: null,
   topTenGames: [],
   index: -1,
+  lastIndex: -1,
   loading: false,
 
 };
@@ -38,7 +40,8 @@ const _hitsReducer = createReducer(
       gamer: action.gamer,
       topTenGames: action.topTenGames ? action.topTenGames : [...state.topTenGames],
       loading: false,
-      index: -1
+      index: -1,
+      lastIndex: -1
     })
   ),
   on(
@@ -71,6 +74,13 @@ const _hitsReducer = createReducer(
       ...state,
       index: action.index
     })
+  ),
+  on(
+    HitsActions.setIndexLastGame,
+    (state, action) => ({
+      ...state,
+      lastIndex: action.lastIndex
+    })
   )
   // ,
   // on(
@@ -97,3 +107,6 @@ export const getOneGame = (state: State) =>
     (state.index >= 0 && state.topTenGames.length > state.index)
     ? state.topTenGames[state.index]
     : null;
+
+export const getIndexLastGame = (state: State) => state.lastIndex < 0 ? null : state.lastIndex;
+export const getIndex = (state: State) => state.index < 0 ? null : state.index;

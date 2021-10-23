@@ -129,11 +129,19 @@ const _mainReducer = createReducer(
   }),
   on(MainAction.cancelGame, (state, action) => ({
     ...state,
-    state: initialState,
+    game: null,
+    xxxx: [],
+    aaaa: [],
+    isFinish: false,
+    keyboard: initialState.keyboard
   })),
   on(MainAction.endGame, (state, action) => ({
     ...state,
-    state: initialState,
+    game: null,
+    xxxx: [],
+    aaaa: [],
+    isFinish: false,
+    keyboard: initialState.keyboard
   }))
 );
 

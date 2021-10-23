@@ -1,7 +1,7 @@
 /* eslint-disable arrow-body-style */
 /* eslint-disable @typescript-eslint/member-ordering */
 import { Injectable } from '@angular/core';
-import { act, Actions, createEffect, ofType } from '@ngrx/effects';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Storage } from '@capacitor/storage';
 import * as fromApp from '../../app.reducer';
 import * as HitsActions from './hits.actions';
@@ -11,10 +11,10 @@ import { map, switchMap, take, tap } from 'rxjs/operators';
 import { HitGame } from '../hits.model';
 import { Store } from '@ngrx/store';
 
-const setHit4n = async (currentGamer: string, topTenGamesames: HitGame[]) => {
+const setHit4n = async (currentGamer: string, topTenGames: HitGame[]) => {
   const hit4n = {
     currentGamer,
-    topTenGamesames,
+    topTenGames,
   };
   const strHit4n = JSON.stringify(hit4n);
   await Storage.set({
@@ -38,16 +38,7 @@ export class HitsEffects {
           return HitsActions.loadDataLSFailed();
         }
         const gamer = hit4n.currentGamer;
-        // if (hit4n.currentGamer) {
-        //   gamer = hit4n.currentGamer;
-        // }
         const topTenGames = hit4n.topTenGames as HitGame[];
-        console.log('hit4n...', hit4n);
-        console.log('Current Gamer...', gamer);
-        // if (hit4n.topTenGames && hit4n.topTenGames.length > 0) {
-        //   topTenGames = [...hit4n.topTenGames];
-        // }
-        console.log('Tpten games...', topTenGames);
         return HitsActions.loadDataLSSuccesss({
           topTenGames,
           gamer
@@ -72,13 +63,9 @@ export class HitsEffects {
               topTenGames = [...action.topTenGames];
             }
             setHit4n(gamer, topTenGames);
-            // this.store.dispatch(HitsActions.endChangeLS({
-            //   gamer,
-            //   topTenGames
-            // }));
             return HitsActions.endChangeLS({
               gamer,
-              topTenGames,
+              topTenGames
             });
           })
         );
@@ -95,7 +82,7 @@ export class HitsEffects {
           map(data => {
             const topTenGames = [...data];
             let isUpdateTopTen = false;
-            let index = -1;
+            let lastIndex = -1;
             if (topTenGames.length <= 9) {
               topTenGames.push(action.newGame);
               topTenGames.sort((a, b) => a.duration - b.duration);
@@ -108,14 +95,14 @@ export class HitsEffects {
               }
             }
             if (isUpdateTopTen) {
-              index = topTenGames.findIndex(hitGame =>
+              lastIndex = topTenGames.findIndex(hitGame =>
                 hitGame.duration === action.newGame.duration
               );
               this.store.dispatch(HitsActions.startChangeLS({
                 topTenGames
               }));
-              return HitsActions.setIndexGame({
-                index
+              return HitsActions.setIndexLastGame({
+                lastIndex
               });
             }
           })

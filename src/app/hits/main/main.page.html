@@ -14,7 +14,7 @@
       class="ion-padding-horizontal"
       button (click)="onOpenDetails(i)"
       detail
-      [color]="lastGameIndex !== i ? undefined : 'warning'"
+      [color]="(lastGameIndex$ | async) !== i ? undefined : 'warning'"
     >
     <!-- [routerLink]="['/','hits', 'main', 'games', i]" -->
       <ion-grid fixed>
@@ -33,7 +33,7 @@
       <ion-note slot="end">{{ g.start | date: 'dd.MM.YY HH:mm' }}</ion-note>
     </ion-item>
   </ion-list>
-  <ion-grid class="ion-align-items-center">
+  <ion-grid class="ion-align-items-center" *ngIf="gamer$|async as gamer">
     <ion-row>
       <ion-col sizeMd="6" offsetMd="3">
         <ion-button (click)="onOpenNewGame()" expand="block" fill="clear" shape="round">

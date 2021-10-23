@@ -26,7 +26,7 @@ export const startChangeLS = createAction(
 );
 
 export const endChangeLS = createAction(
-  '[Storage End Changes]',
+  '[Storage] End Changes',
   props<{
     gamer: string;
     topTenGames: HitGame[];
@@ -34,9 +34,16 @@ export const endChangeLS = createAction(
 );
 
 export const setIndexGame = createAction(
-  'Set Index Curent Game',
+  '[Hits] Set Index Game',
   props<{
     index: number;
+  }>()
+);
+
+export const setIndexLastGame = createAction(
+  '[Hits] Set Index Last Game',
+  props<{
+    lastIndex: number;
   }>()
 );
 

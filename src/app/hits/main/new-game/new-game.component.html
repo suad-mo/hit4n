@@ -1,78 +1,89 @@
-<ion-header *ngIf="(gamer$ | async) as gamer">
+<ion-header *ngIf="(gamer$ | async) as gamer1">
   <ion-toolbar>
-    <ion-title>{{ gamer }}</ion-title>
+    <ion-title>{{ gamer1 }}</ion-title>
     <ion-buttons [slot]="'end'">
-      <ion-button (click)="onCancel()" *ngIf="isStarting">
+      <ion-button (click)="onCancel()">
         <ion-icon name="close"></ion-icon>
       </ion-button>
-      <ion-button (click)="onStartGame(gamer)" fill="clear" *ngIf="!isStarting">
+      <!-- <ion-button (click)="onStartGame(gamer)" fill="clear" *ngIf="!isStarting">
         <ion-icon slot="start" name="add"></ion-icon>
         Start...
-      </ion-button>
+      </ion-button> -->
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 <ion-content>
   <ion-grid>
-    <ion-grid fixed>
-      <!-- <div>
-          <ion-row *ngIf="!isStarting" style="margin-top: 200px;" class="ion-text-center">
-            <ion-col size="12">
-              <ion-button (click)="onStartGame(gamer)">
-                <ion-icon slot="start" name="add"></ion-icon>
-                Start...
-              </ion-button>
-            </ion-col>
-          </ion-row>
-        </div> -->
-      <ion-row *ngFor="let h of (game$ | async)?.hits; index as i" color="success">
-        <ion-col size="1" offset="1">
-          <ion-chip color="primary">
-            <ion-label color="primary">{{ i + 1 }}.</ion-label>
-          </ion-chip>
-        </ion-col>
-        <ion-col size="1">
-        </ion-col>
-        <ion-col size="1" *ngFor="let n of h.aaaa">
-          <ion-chip color="primary">
-            <ion-label color="primary"><strong>{{n.a}}</strong></ion-label>
-          </ion-chip>
-        </ion-col>
-        <ion-col size="1"> </ion-col>
-        <ion-col size="1" offset="1">
-          <ion-chip color="primary">
-            <ion-label color="primary"><strong>{{ h.total }}</strong></ion-label>
-          </ion-chip>
-        </ion-col>
-        <ion-col size="1">
-          <ion-chip color="primary">
-            <ion-label color="primary">{{ h.place }}</ion-label>
-          </ion-chip>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="2" offset="1"> </ion-col>
-        <ion-col size="1" *ngFor="let n of (aaaa$|async)">
-          <ion-chip>
-            <ion-label color="primary">{{n}}</ion-label>
-          </ion-chip>
-        </ion-col>
-      </ion-row>
-
-      <ion-row *ngIf="(game$ | async)?.isBingo === true">
-        <ion-col size="12">
-          <ion-title>Bingo</ion-title>
-        </ion-col>
-      </ion-row>
-      <ion-row *ngIf="(game$ | async)?.isBingo === true">
-        <ion-col>
-          <ion-button *ngIf="(game$ | async) as g" (click)="onFinish(g)">
+    <div>
+      <ion-row *ngIf="!isStarting" style="margin-top: 200px;" class="ion-text-center">
+        <ion-col size="12" *ngIf="(gamer$ | async) as g">
+          <ion-button (click)="onStartGame(g)">
             <ion-icon slot="start" name="add"></ion-icon>
             Start...
           </ion-button>
         </ion-col>
       </ion-row>
-    </ion-grid>
+    </div>
+    <ion-row *ngFor="let h of (game$ | async)?.hits; index as i" color="success">
+      <ion-col size="1" offset="1">
+        <ion-chip color="primary">
+          <ion-label color="primary">{{ i + 1 }}.</ion-label>
+        </ion-chip>
+      </ion-col>
+      <ion-col size="1">
+      </ion-col>
+      <ion-col size="1" *ngFor="let n of h.aaaa">
+        <ion-chip color="primary">
+          <ion-label color="primary"><strong>{{n.a}}</strong></ion-label>
+        </ion-chip>
+      </ion-col>
+      <ion-col size="1"> </ion-col>
+      <ion-col size="1" offset="1">
+        <ion-chip color="primary">
+          <ion-label color="primary"><strong>{{ h.total }}</strong></ion-label>
+        </ion-chip>
+      </ion-col>
+      <ion-col size="1">
+        <ion-chip color="primary">
+          <ion-label color="primary">{{ h.place }}</ion-label>
+        </ion-chip>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="2" offset="1"> </ion-col>
+      <ion-col size="1" *ngFor="let n of (aaaa$|async)">
+        <ion-chip>
+          <ion-label color="primary">{{n}}</ion-label>
+        </ion-chip>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-grid *ngIf="(game$|async) as igra">
+    <ion-row>
+      <ion-col size="6"></ion-col>
+      <ion-col size="6"></ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="(game$ | async)?.isBingo === true">
+      <ion-col size="12">
+        <ion-title>Bingo</ion-title>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="(game$ | async)?.isBingo === true">
+      <ion-col size="12">
+        <ion-item>
+          <ion-label>Time: {{ igra.duration }}</ion-label>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="(game$ | async)?.isBingo === true" class="ion-text-center">
+      <ion-col size="4" offset="4">
+        <ion-button *ngIf="(game$ | async) as g" (click)="onFinish(g)">
+          <ion-icon slot="end" name="checkmark-outline"></ion-icon>
+          End...
+        </ion-button>
+      </ion-col>
+    </ion-row>
   </ion-grid>
 </ion-content>
 

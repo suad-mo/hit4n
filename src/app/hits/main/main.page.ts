@@ -11,9 +11,9 @@ import * as fromApp from './../../app.reducer';
 import * as fromHits from './../store/hits.reducer';
 import * as HitsAction from './../store/hits.actions';
 import * as fromMain from './store/main.reducer';
+import * as MainActions from './store/main.actions';
 
-import { Hit, HitGame } from '../hits.model';
-import { HitsService } from '../hits.service';
+import { HitGame } from '../hits.model';
 import { NewGameComponent } from './new-game/new-game.component';
 
 @Component({
@@ -21,8 +21,10 @@ import { NewGameComponent } from './new-game/new-game.component';
   templateUrl: './main.page.html',
   styleUrls: ['./main.page.scss'],
 })
-export class MainPage implements OnInit, OnDestroy {
+export class MainPage implements OnInit {
   lastGameIndex: number;
+
+  lastGameIndex$: Observable<number>;
   topTenGames$ = new Observable<HitGame[]>();
   gamer$ = new Observable<string>();
 
@@ -30,25 +32,23 @@ export class MainPage implements OnInit, OnDestroy {
 
   constructor(
     private modalCtrl: ModalController,
-    private hitService: HitsService,
     private router: Router,
     private store: Store<fromApp.State>
   ) { }
 
   ngOnInit() {
-    //this.topTenGames$ = this.hitService.topTenGames;
     this.topTenGames$ = this.store.select(fromApp.getTopTenGames);
     this.gamer$ = this.store.select(fromApp.getGamer);
+    this.lastGameIndex$ = this.store.select(fromApp.getIndexLastGame)
   }
 
-  onOpenNewGame() {
+  async onOpenNewGame() {
     console.log('Početak igre...');
+    await this.store.dispatch(MainActions.cancelGame());
     this.openNewGameModal();
   }
 
   private openNewGameModal() {
-    let currentGamer: string;
-    let topTenGames: HitGame[];
     this.modalCtrl
       .create({
         component: NewGameComponent,
@@ -72,11 +72,5 @@ export class MainPage implements OnInit, OnDestroy {
 
   onOpenDetails(index: number) {
     this.router.navigate(['hits/main/games', index]);
-  }
-
-  ngOnDestroy() {
-    if (this.sub) {
-      this.sub.unsubscribe();
-    }
   }
 }
