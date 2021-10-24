@@ -11,20 +11,20 @@ import { from } from 'rxjs';
 
 @Injectable()
 export class MainEffcts {
-  endGame$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(MainActions.endGame),
-      switchMap(async (actions) => HitsAction.addNewGameInTopTen({
-          newGame: actions.finishedGame
-        })
-        // HitsAction.addNewGameInTopTen({
-        //   newGame: actions.finishedGame,
-        // })
-      ),
-      tap((data) => console.log('Effect end GAme......', data)
-      )
-    )
-  );
+  // endGame$ = createEffect(() =>
+  //   this.actions$.pipe(
+  //     ofType(MainActions.endGame),
+  //     switchMap(async (actions) => HitsAction.addNewGameInTopTen({
+  //         newGame: actions.finishedGame
+  //       })
+  //       // HitsAction.addNewGameInTopTen({
+  //       //   newGame: actions.finishedGame,
+  //       // })
+  //     ),
+  //     tap((data) => console.log('Effect end GAme......', data)
+  //     )
+  //   )
+  // );
 
   // addOneNumber$ = createEffect(() =>
   //   this.actions$.pipe(

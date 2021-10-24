@@ -33,6 +33,14 @@ export const addOneNumber = createAction(
   }>()
 );
 
+export const daleteOneNumber = createAction(
+  '[Main] Delete One Mumber',
+  props<{
+    index: number;
+    value: number;
+  }>()
+);
+
 export const updateAaaa = createAction(
   '[Main] Update Aaaa props',
   props<{

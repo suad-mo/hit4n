@@ -117,6 +117,17 @@ const _mainReducer = createReducer(
       keyboard,
     };
   }),
+  on(MainAction.daleteOneNumber, (state, action) => {
+    const aaaa = [...state.aaaa];
+    aaaa.splice(action.index, 1);
+    const keyboard = [...state.keyboard];
+    keyboard[action.value] = false;
+    return {
+      ...state,
+      aaaa,
+      keyboard
+    };
+  }),
   on(MainAction.updateAaaa, (state, action) => {
     const aaaa = [...state.aaaa];
     const keyboard = [...state.keyboard];

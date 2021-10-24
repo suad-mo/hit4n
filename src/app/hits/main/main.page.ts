@@ -58,10 +58,10 @@ export class MainPage implements OnInit {
         modalEl.present();
         return modalEl.onDidDismiss();
       })
-      .then(async (resData) => {
+      .then((resData) => {
         if (resData.role === 'success') {
           console.log('Success...');
-          await this.store.dispatch(HitsAction.addNewGameInTopTen({
+          this.store.dispatch(HitsAction.addNewGameInTopTen({
             newGame: resData.data
           }));
         } else {

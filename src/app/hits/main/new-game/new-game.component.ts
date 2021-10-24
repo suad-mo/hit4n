@@ -62,6 +62,10 @@ export class NewGameComponent implements OnInit {
     );
   }
 
+  onDeleteOneNumber(index: number, value: number) {
+    this.store.dispatch(MainActions.daleteOneNumber({ index, value}));
+  }
+
   onFinish(game: HitGame) {
     this.modalCtrl.dismiss(game, 'success');
   }

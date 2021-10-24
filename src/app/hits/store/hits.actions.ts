@@ -22,6 +22,7 @@ export const startChangeLS = createAction(
   props<{
     gamer?: string;
     topTenGames?: HitGame[];
+    lastIndex?: number;
   }>()
 );
 
@@ -30,6 +31,7 @@ export const endChangeLS = createAction(
   props<{
     gamer: string;
     topTenGames: HitGame[];
+    lastIndex?: number;
   }>()
 );
 

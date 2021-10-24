@@ -65,7 +65,8 @@ const _hitsReducer = createReducer(
       gamer: action.gamer,
       topTenGames: [...action.topTenGames],
       loading: false,
-      index: -1
+      index: -1,
+      lastIndex: action.lastIndex !== undefined ? action.lastIndex : state.lastIndex
     })
   ),
   on(

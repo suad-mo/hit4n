@@ -56,6 +56,8 @@ export class HitsEffects {
           map((data) => {
             let gamer = data.gamer;
             let topTenGames = [...data.topTenGames];
+            const lastIndex = action.lastIndex;
+
             if (action.gamer !== undefined) {
               gamer = action.gamer;
             }
@@ -65,7 +67,8 @@ export class HitsEffects {
             setHit4n(gamer, topTenGames);
             return HitsActions.endChangeLS({
               gamer,
-              topTenGames
+              topTenGames,
+              lastIndex: lastIndex !== undefined ? lastIndex : -1
             });
           })
         );
@@ -81,6 +84,7 @@ export class HitsEffects {
           take(1),
           map(data => {
             const topTenGames = [...data];
+            console.log('topTenGames:', topTenGames);
             let isUpdateTopTen = false;
             let lastIndex = -1;
             if (topTenGames.length <= 9) {
@@ -98,12 +102,15 @@ export class HitsEffects {
               lastIndex = topTenGames.findIndex(hitGame =>
                 hitGame.duration === action.newGame.duration
               );
-              this.store.dispatch(HitsActions.startChangeLS({
-                topTenGames
-              }));
-              return HitsActions.setIndexLastGame({
+              console.log('topTenGames:', topTenGames);
+
+              return HitsActions.startChangeLS({
+                topTenGames,
                 lastIndex
               });
+              // return HitsActions.setIndexLastGame({
+              //   lastIndex
+              // });
             }
           })
         );
