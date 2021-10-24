@@ -6,10 +6,11 @@ import { Storage } from '@capacitor/storage';
 import * as fromApp from '../../app.reducer';
 import * as HitsActions from './hits.actions';
 
-import { map, switchMap, take, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, take } from 'rxjs/operators';
 
 import { HitGame } from '../hits.model';
 import { Store } from '@ngrx/store';
+import { of } from 'rxjs';
 
 const setHit4n = async (currentGamer: string, topTenGames: HitGame[]) => {
   const hit4n = {
@@ -70,6 +71,10 @@ export class HitsEffects {
               topTenGames,
               lastIndex: lastIndex !== undefined ? lastIndex : -1
             });
+          }),
+          catchError(err => {
+            console.log(err);
+            return of({ type: 'ERROR'});
           })
         );
       })
@@ -84,7 +89,6 @@ export class HitsEffects {
           take(1),
           map(data => {
             const topTenGames = [...data];
-            console.log('topTenGames:', topTenGames);
             let isUpdateTopTen = false;
             let lastIndex = -1;
             if (topTenGames.length <= 9) {
@@ -102,16 +106,17 @@ export class HitsEffects {
               lastIndex = topTenGames.findIndex(hitGame =>
                 hitGame.duration === action.newGame.duration
               );
-              console.log('topTenGames:', topTenGames);
-
               return HitsActions.startChangeLS({
                 topTenGames,
                 lastIndex
               });
-              // return HitsActions.setIndexLastGame({
-              //   lastIndex
-              // });
+            } else {
+              return { type: 'NO_CHANGE' };
             }
+          }),
+          catchError(err => {
+            console.log(err);
+            return of({ type: 'ERROR'});
           })
         );
       })

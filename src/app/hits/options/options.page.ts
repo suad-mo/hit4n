@@ -1,12 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Dialog } from '@capacitor/dialog';
 import { AlertController } from '@ionic/angular';
-import { Observable, Subscription } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
-import { Hit, HitGame } from '../hits.model';
-import { HitsService } from '../hits.service';
-import { State, Store } from '@ngrx/store';
-import * as fromHits from '../store/hits.reducer';
+import { Observable } from 'rxjs';
+import { HitGame } from '../hits.model';
+import { Store } from '@ngrx/store';
 import * as HitsAction from '../store/hits.actions';
 import * as fromApp from '../../app.reducer';
 import * as data from '../../../assets/data/top-ten-games';
@@ -17,19 +14,13 @@ const TOP_TEN_GAMES: HitGame[] = data.topTenGames as unknown as HitGame[];
   templateUrl: './options.page.html',
   styleUrls: ['./options.page.scss'],
 })
-export class OptionsPage implements OnInit, OnDestroy {
+export class OptionsPage implements OnInit {
   currentGamer$: Observable<string>;
   topTenGames$: Observable<HitGame[]>;
 
   toogleCheck = false;
-  // isDelete = false;
-  // isLoad = true;
-
-  private sub: Subscription;
-  private sub1: Subscription;
 
   constructor(
-    private hitService: HitsService,
     private alertCtrl: AlertController,
     private store: Store<fromApp.State>
   ) { }
@@ -39,34 +30,12 @@ export class OptionsPage implements OnInit, OnDestroy {
     this.topTenGames$ = this.store.select(fromApp.getTopTenGames);
   }
 
-  onChangeGamer() {
-    let currentGamer: string;
-    this.sub = this.currentGamer$
-      .subscribe(gamer => {
-        currentGamer = gamer;
-      });
-    Dialog.prompt({
-      title: 'Hello gamer!',
-      message: `What's your name?`,
-      inputText: currentGamer
-    })
-      .then(resData => {
-        if (!resData.cancelled && resData.value) {
-          // this.hitService.setCurrentGamer(resData.value);
-          this.store.dispatch(HitsAction.startChangeLS({
-            gamer: resData.value
-          }));
-        }
-      });
-  };
-
-  onChangeCurrentGamer = async () => {
+  onChangeCurrentGamer = async (gamer: string) => {
     const { value, cancelled } = await Dialog.prompt({
       title: 'Hello',
       message: `What's your name?`,
+      inputText: gamer
     });
-    console.log('Name:', value);
-    console.log('Cancelled:', cancelled);
 
     if (value && !cancelled) {
       this.store.dispatch(HitsAction.startChangeLS({
@@ -109,14 +78,4 @@ export class OptionsPage implements OnInit, OnDestroy {
       topTenGames: TOP_TEN_GAMES
     }));
   }
-
-  ngOnDestroy() {
-    if (this.sub) {
-      this.sub.unsubscribe();
-    }
-    if (this.sub1) {
-      this.sub1.unsubscribe();
-    }
-  }
-
 }

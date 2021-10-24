@@ -16,7 +16,6 @@
       detail
       [color]="(lastGameIndex$ | async) !== i ? undefined : 'warning'"
     >
-    <!-- [routerLink]="['/','hits', 'main', 'games', i]" -->
       <ion-grid fixed>
         <ion-row>
           <ion-col size="3">
@@ -33,10 +32,10 @@
       <ion-note slot="end">{{ g.start | date: 'dd.MM.YY HH:mm' }}</ion-note>
     </ion-item>
   </ion-list>
-  <ion-grid class="ion-align-items-center" *ngIf="gamer$|async as gamer">
-    <ion-row>
-      <ion-col sizeMd="6" offsetMd="3">
-        <ion-button (click)="onOpenNewGame()" expand="block" fill="clear" shape="round">
+  <ion-grid *ngIf="gamer$|async as gamer">
+    <ion-row class="ion-text-center">
+      <ion-col size="12">
+        <ion-button (click)="onOpenNewGame()" shape="round">
           New game...
         </ion-button>
       </ion-col>

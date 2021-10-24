@@ -9,14 +9,14 @@
 
 <ion-content>
 <ion-grid fixed>
-  <ion-row>
+  <ion-row *ngIf="(currentGamer$|async) as gamer">
     <ion-col size="6">
       <ion-item>
-        <ion-label>{{ currentGamer$ | async }}</ion-label>
+        <ion-label>{{ gamer }}</ion-label>
       </ion-item>
     </ion-col>
     <ion-col size="6">
-      <ion-button (click)="onChangeCurrentGamer()" expand="block" fill="clear" shape="round">
+      <ion-button (click)="onChangeCurrentGamer(gamer)" expand="block" fill="clear" shape="round">
         Change name...
       </ion-button>
     </ion-col>

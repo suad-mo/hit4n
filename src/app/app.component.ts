@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 
-import { HitsService } from './hits/hits.service';
+//import { HitsService } from './hits/hits.service';
 
 import * as fromApp from './app.reducer';
 import * as HitsActions from './hits/store/hits.actions';
@@ -14,7 +14,7 @@ import * as HitsActions from './hits/store/hits.actions';
 export class AppComponent implements OnInit {
 
   constructor(
-    private hitsService: HitsService,
+    //private hitsService: HitsService,
     private store: Store<fromApp.State>
   ) {}
 

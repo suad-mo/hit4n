@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/semi */
 /* eslint-disable @typescript-eslint/member-ordering */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
-import { Observable, Subscription } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 import { Store } from '@ngrx/store';
 import * as fromApp from './../../app.reducer';
@@ -28,8 +27,6 @@ export class MainPage implements OnInit {
   topTenGames$ = new Observable<HitGame[]>();
   gamer$ = new Observable<string>();
 
-  private sub: Subscription;
-
   constructor(
     private modalCtrl: ModalController,
     private router: Router,
@@ -43,7 +40,6 @@ export class MainPage implements OnInit {
   }
 
   async onOpenNewGame() {
-    console.log('Početak igre...');
     await this.store.dispatch(MainActions.cancelGame());
     this.openNewGameModal();
   }

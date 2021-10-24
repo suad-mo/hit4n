@@ -1,5 +1,4 @@
 import { ActionReducerMap, createFeatureSelector, createSelector} from '@ngrx/store';
-import { Hit } from './hits/hits.model';
 import * as fromHits from './hits/store/hits.reducer';
 
 export interface State {

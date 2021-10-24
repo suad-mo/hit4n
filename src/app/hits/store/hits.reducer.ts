@@ -83,17 +83,6 @@ const _hitsReducer = createReducer(
       lastIndex: action.lastIndex
     })
   )
-  // ,
-  // on(
-  //   HitsActions.addNewGameInTopTen,
-  //   (state, actions) => {
-  //     let x;
-  //     return {
-  //       ...state,
-  //       topTenGames = actions.
-  //     };
-  //   }
-  // )
 );
 
 export function hitsReducer(state: State, action: Action) {

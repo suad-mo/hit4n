@@ -1,4 +1,4 @@
-import { createAction, createSelector, props } from '@ngrx/store';
+import { createAction, props } from '@ngrx/store';
 import { HitGame } from '../hits.model';
 
 export const loadDataLSStart = createAction(
