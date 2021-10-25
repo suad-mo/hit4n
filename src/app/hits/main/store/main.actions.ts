@@ -58,3 +58,11 @@ export const endGame = createAction(
     finishedGame: HitGame;
   }>()
 );
+
+export const addHint = createAction(
+  '[Hint] Add Hint',
+  props<{
+    i: number;
+    j: number;
+  }>()
+);

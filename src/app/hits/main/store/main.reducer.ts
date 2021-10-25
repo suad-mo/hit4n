@@ -8,6 +8,7 @@ import {
 import { HitGame } from '../../hits.model';
 import * as MainAction from './main.actions';
 import * as fromApp from '../../../app.reducer';
+import { act } from '@ngrx/effects';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export interface mainState {
@@ -16,6 +17,7 @@ export interface mainState {
   aaaa: number[];
   isFinish: boolean;
   keyboard: boolean[];
+  hint: boolean[][];
 }
 
 export interface State extends fromApp.State {
@@ -39,6 +41,7 @@ const initialState: mainState = {
     false,
     false,
   ],
+  hint: []
 };
 
 // eslint-disable-next-line no-underscore-dangle
@@ -99,11 +102,14 @@ const _mainReducer = createReducer(
     let aaaa = [...state.aaaa];
     let keyboard = [...state.keyboard];
     let isFinish = state.isFinish;
+    const hint = [...state.hint];
     if (aaaa.length < 4) {
       aaaa.push(action.num);//update aaaa
       keyboard[action.num] = true;//update keyboard
       if (aaaa.length === 4) {
         game.addHit(aaaa);
+        const h = [false, false, false, false];
+        hint.push(h);
         aaaa = initialState.aaaa;
         keyboard = initialState.keyboard;
         isFinish = game.isBingo;
@@ -115,6 +121,7 @@ const _mainReducer = createReducer(
       isFinish: true,
       aaaa,
       keyboard,
+      hint
     };
   }),
   on(MainAction.daleteOneNumber, (state, action) => {
@@ -144,7 +151,8 @@ const _mainReducer = createReducer(
     xxxx: [],
     aaaa: [],
     isFinish: false,
-    keyboard: initialState.keyboard
+    keyboard: initialState.keyboard,
+    hint: []
   })),
   on(MainAction.endGame, (state, action) => ({
     ...state,
@@ -152,8 +160,21 @@ const _mainReducer = createReducer(
     xxxx: [],
     aaaa: [],
     isFinish: false,
-    keyboard: initialState.keyboard
-  }))
+    keyboard: initialState.keyboard,
+    hint: []
+  })),
+  on(MainAction.addHint, (state, action) => {
+    const i = action.i;
+    const j = action.j;
+    const hint = [...state.hint];
+    if (state.game.hits[action.i].aaaa[j].t) {
+      hint[i][j] = !hint[i][j];
+    }
+    return {
+      ...state,
+      hint: [...hint]
+    };
+  })
 );
 
 // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
@@ -187,3 +208,11 @@ export const getKeyboard = createSelector(
   getMainState,
   (state: mainState) => state.keyboard
 );
+export const getHint = createSelector(
+  getMainState,
+  (state: mainState) => state.hint
+);
+// export const getIsHintRow = createSelector(
+//   getMainState,
+//   (state: mainState) => state.hint.map(h => h[0] || h[1] || h[2] || h[3])
+// );

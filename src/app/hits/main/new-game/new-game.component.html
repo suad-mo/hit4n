@@ -22,15 +22,15 @@
     </div>
     <ion-row *ngFor="let h of (game$ | async)?.hits; index as i" color="success">
       <ion-col size="1" offset="1">
-        <ion-chip color="primary">
+        <ion-chip [color]="isHintRow[i] ? 'danger' : 'primary'">
           <ion-label color="primary">{{ i + 1 }}.</ion-label>
         </ion-chip>
       </ion-col>
       <ion-col size="1">
       </ion-col>
-      <ion-col size="1" *ngFor="let n of h.aaaa">
-        <ion-chip color="primary">
-          <ion-label color="primary"><strong>{{n.a}}</strong></ion-label>
+      <ion-col size="1" *ngFor="let n of h.aaaa; index as j">
+        <ion-chip [color]="(hint$|async)[i][j] === false ? 'primary' : 'danger'" (click)="onHint(i,j)">
+          <ion-label [color]="(hint$|async)[i][j] === false ? 'primary' : 'danger'"><strong>{{n.a}}</strong></ion-label>
         </ion-chip>
       </ion-col>
       <ion-col size="1"> </ion-col>
@@ -68,7 +68,7 @@
     <ion-row *ngIf="(game$ | async)?.isBingo === true">
       <ion-col size="12">
         <ion-item>
-          <ion-label>Time: {{ igra.duration }}</ion-label>
+          <ion-label>Time: {{ igra.duration | date: "mm:ss:SS" }}</ion-label>
         </ion-item>
       </ion-col>
     </ion-row>
