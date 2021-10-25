@@ -5,69 +5,170 @@
       <ion-back-button defaultHref="hits"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
-  <ion-toolbar>
-    <ion-segment value="about" (ionChange)="onChangeTab($event)" scrollable>
-      <ion-segment-button value="about">
-        <ion-label>About game</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="help">
-        <ion-label>Help</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="oneGame">
-        <ion-label>One game</ion-label>
-      </ion-segment-button>
-    </ion-segment>
-  </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <ion-segment [(ngModel)]="segment" scrollable>
-    <ion-segment-button value="first">
-      First
+  <!-- <ion-segment [(ngModel)]="segment" scrollable value="description"> -->
+  <ion-segment (ionChange)="segmentChanged($event)" value="description">
+    <ion-segment-button value="description">
+      Description
     </ion-segment-button>
-    <ion-segment-button value="second">
-      Second
+    <ion-segment-button value="example">
+      Example
     </ion-segment-button>
-    <ion-segment-button value="third">
-      Three
-    </ion-segment-button>
-    <ion-segment-button value="prvi">
-      Prvi
-    </ion-segment-button>
-    <ion-segment-button value="drugi">
-      Drugi
-    </ion-segment-button>
-    <ion-segment-button value="treci">
-      Treći
+    <ion-segment-button value="hint">
+      Hint
     </ion-segment-button>
   </ion-segment>
 
 
   <div [ngSwitch]="segment">
-    <ion-card *ngSwitchCase="'first'">
+    <ion-card *ngSwitchCase="'description'">
       <ion-card-header>
-        First Content
       </ion-card-header>
       <ion-card-content>
-        First Content here
+        <ion-text color="primary">
+          <!-- <h1>Dscription</h1> -->
+          <p>The hit4n game is a game of guessing an unknown sequence of four different digits.</p>
+          <hr>
+          <p>At the beginning of the game, a random string of four different digits is generated.</p>
+          <p>Numbers from 0 to 9.</p>
+          <hr>
+          <p>Enter 4 digits after which we get the answer in the form X : Y =></p>
+          <p> X - total number of hits</p>
+          <p> Y - how many of them are in place.</p>
+          <hr>
+          <p>The game continues until we hit all four numbers and their positions</p>
+        </ion-text>
       </ion-card-content>
     </ion-card>
 
-    <ion-card *ngSwitchCase="'second'">
+    <ion-card *ngSwitchCase="'example'">
       <ion-card-header>
-        Second Header
+        <!-- <h3>Unknown Through Numbers</h3> -->
+        <ion-grid fixed>
+          <ion-row>
+            <ion-col size="12">
+              <ion-label>Unknown Through Numbers</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="1" offset="1">
+              <ion-chip color="dark">
+                <ion-label color="primary"><strong>1</strong></ion-label>
+              </ion-chip>
+            </ion-col>
+            <ion-col size="1" offset="1">
+              <ion-chip color="dark">
+                <ion-label color="primary"><strong>5</strong></ion-label>
+              </ion-chip>
+            </ion-col>
+            <ion-col size="1" offset="1">
+              <ion-chip color="dark">
+                <ion-label color="primary"><strong>8</strong></ion-label>
+              </ion-chip>
+            </ion-col>
+            <ion-col size="1" offset="1">
+              <ion-chip color="dark">
+                <ion-label color="primary"><strong>0</strong></ion-label>
+              </ion-chip>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12">
+              <ion-label>We guess:</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="1" offset="1">
+              <ion-chip color="primary">
+                <ion-label color="primary"><strong>9</strong></ion-label>
+              </ion-chip>
+            </ion-col>
+            <ion-col size="1" offset="1">
+              <ion-chip color="danger">
+                <ion-label color="danger"><strong>5</strong></ion-label>
+              </ion-chip>
+            </ion-col>
+            <ion-col size="1" offset="1">
+              <ion-chip color="primary">
+                <ion-label color="primary"><strong>4</strong></ion-label>
+              </ion-chip>
+            </ion-col>
+            <ion-col size="1" offset="1">
+              <ion-chip color="success">
+                <ion-label color="success"><strong>8</strong></ion-label>
+              </ion-chip>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12">
+              <ion-label>Result:</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="1" offset="5">
+              <ion-chip color="primary">
+                <ion-label color="primary"><strong>2</strong></ion-label>
+              </ion-chip>
+            </ion-col>
+            <ion-col size="1" offset="1">
+              <ion-chip color="primary">
+                <ion-label color="primary"><strong>1</strong></ion-label>
+              </ion-chip>
+            </ion-col>
+            <!-- <ion-col size="1" offset="1">
+              <ion-chip color="primary">
+                <ion-label color="primary"><strong>4</strong></ion-label>
+              </ion-chip> total number affected
+            </ion-col>
+            <ion-col size="1" offset="1">
+              <ion-chip color="primary">
+                <ion-label color="primary"><strong>8</strong></ion-label>
+              </ion-chip>
+            </ion-col> -->
+          </ion-row>
+          <ion-row>
+            <ion-col size="12">
+              <ion-label>Total Number Affected (5 and 8):</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="1" offset="5">
+              <ion-chip color="primary">
+                <ion-label color="primary"><strong>2</strong></ion-label>
+              </ion-chip>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12">
+              <ion-label>Total Affected Positions (5):</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="1" offset="7">
+              <ion-chip color="primary">
+                <ion-label color="primary"><strong>1</strong></ion-label>
+              </ion-chip>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
       </ion-card-header>
       <ion-card-content>
-        Second content here
       </ion-card-content>
     </ion-card>
 
-    <ion-card *ngSwitchCase="'third'">
+    <ion-card *ngSwitchCase="'hint'">
       <ion-card-header>
         Third Header
       </ion-card-header>
       <ion-card-content>
-        Third content
+        <ion-text color="primary">
+          <h1>Hints</h1>
+          <p>In each row we can check one number by clicking on it</p>
+          <p>Clicking on a number in a series of unknown numbers will change the background</p>
+        </ion-text>
+
       </ion-card-content>
     </ion-card>
   </div>
