@@ -1,8 +1,12 @@
 /* eslint-disable @angular-eslint/no-output-rename */
 /* eslint-disable @typescript-eslint/member-ordering */
 /* eslint-disable @angular-eslint/no-input-rename */
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { Hit } from '../../../hits.model';
+import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import * as fromMain from '../../store/main.reducer';
+import * as MainActions from '../../store/main.actions';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-keyboard',
@@ -10,62 +14,19 @@ import { Hit } from '../../../hits.model';
   styleUrls: ['./keyboard.component.scss'],
 })
 export class KeyboardComponent implements OnInit {
-  @Output('newEnterNumber')
-  public newEnterNumber: EventEmitter<number[]> = new EventEmitter();
-  @Output('finishEnterNumber')
-  public finishEnterNumber: EventEmitter<void> = new EventEmitter();
-  @Output('hint')
-  public hint: EventEmitter<number> = new EventEmitter();
+  keyboard$: Observable<boolean[]> = this.store.select(fromMain.getKeyboard);
+  aaaa$: Observable<number[]> = this.store.select(fromMain.getAaaa);
 
-  @Input('hits')
-  public hits: Hit[];
-  @Input('xxxx')
-  public xxxx: number[];
+  constructor(
+    private store: Store<fromMain.State>
+  ) { }
 
-  public nums: number[] = [];
-  public total = 0;
+  ngOnInit() { }
 
-  isOdabran: boolean[] = [false, false, false, false, false, false, false, false, false, false];
-  isHint = true;
-
-  constructor() { }
-
-  ngOnInit() {}
-
-  onSelectNumber(n: number) {
-    if (this.total >= 4) {
-      return;
-    }
-    this.total++;
-    this.nums.push(n);
-    this.isOdabran[n]=true;
-    this.newEnterNumber.emit(this.nums);
-  }
-
-  onOk() {
-    this.finishEnterNumber.emit();
-    this.isOdabran = [false, false, false, false, false, false, false, false, false, false];
-    this.total = 0;
-    this.nums = [];
-  }
-
-  onCancel() {
-    this.isOdabran = [false, false, false, false, false, false, false, false, false, false];
-    this.total = 0;
-    this.nums = [];
-    this.newEnterNumber.emit(this.nums);
-  }
-
-  onHint() {
-    if (this.total >= 4) {
-      return;
-    }
-    const n = this.xxxx[this.total];
-    this.nums.push(n);
-    this.isOdabran[n] = true;
-    this.total++;
-    this.isHint = false;
-    this.newEnterNumber.emit(this.nums);
+  async onEnterNumber(num: number) {
+    await this.store.dispatch(MainActions.addOneNumber({
+      num
+    }));
   }
 
 }

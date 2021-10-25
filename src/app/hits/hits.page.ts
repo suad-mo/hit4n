@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { HitsService } from './hits.service';
+import * as HitsActions from './store/hits.actions';
+//import { HitsService } from './hits.service';
 
 @Component({
   selector: 'app-hits',
@@ -11,11 +13,14 @@ export class HitsPage implements OnInit, OnDestroy {
   hits4$: Observable<any>;
 
   constructor(
-    private hitsService: HitsService
+    //private hitsService: HitsService,
+    private store: Store
   ) { }
 
   ngOnInit() {
-    this.hitsService.checkGamerAndTopTenGames();
+    //this.hitsService.checkGamerAndTopTenGames();
+    this.store.dispatch(HitsActions.loadDataLSStart());
+
   }
 
   ngOnDestroy() {

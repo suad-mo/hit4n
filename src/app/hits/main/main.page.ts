@@ -1,13 +1,18 @@
 /* eslint-disable @typescript-eslint/semi */
 /* eslint-disable @typescript-eslint/member-ordering */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
-import { Observable, Subscription } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
-import { Hit, HitGame } from '../hits.model';
-import { HitsService } from '../hits.service';
+import { Store } from '@ngrx/store';
+import * as fromApp from './../../app.reducer';
+import * as fromHits from './../store/hits.reducer';
+import * as HitsAction from './../store/hits.actions';
+import * as fromMain from './store/main.reducer';
+import * as MainActions from './store/main.actions';
+
+import { HitGame } from '../hits.model';
 import { NewGameComponent } from './new-game/new-game.component';
 
 @Component({
@@ -15,73 +20,48 @@ import { NewGameComponent } from './new-game/new-game.component';
   templateUrl: './main.page.html',
   styleUrls: ['./main.page.scss'],
 })
-export class MainPage implements OnInit, OnDestroy {
+export class MainPage implements OnInit {
   lastGameIndex: number;
-  topTenGames$ = new Observable<HitGame[]>();
-  currentGamer$ = new Observable<string>();
 
-  private sub: Subscription;
+  lastGameIndex$: Observable<number>;
+  topTenGames$ = new Observable<HitGame[]>();
+  gamer$ = new Observable<string>();
 
   constructor(
     private modalCtrl: ModalController,
-    private hitService: HitsService,
     private router: Router,
+    private store: Store<fromApp.State>
   ) { }
 
   ngOnInit() {
-    this.topTenGames$ = this.hitService.topTenGames;
-    this.currentGamer$ = this.hitService.currentGamer;
+    this.topTenGames$ = this.store.select(fromApp.getTopTenGames);
+    this.gamer$ = this.store.select(fromApp.getGamer);
+    this.lastGameIndex$ = this.store.select(fromApp.getIndexLastGame)
   }
 
-  onOpenNewGame() {
-    console.log('Početak igre...');
+  async onOpenNewGame() {
+    await this.store.dispatch(MainActions.cancelGame());
     this.openNewGameModal();
   }
 
   private openNewGameModal() {
-    let currentGamer: string;
-    let topTenGames: HitGame[];
-    this.sub = this.currentGamer$.pipe(
-      switchMap(gamer => {
-        currentGamer = gamer;
-        return this.topTenGames$;
-      }))
-      .subscribe(topGames => {
-        topTenGames = topGames
-      });
     this.modalCtrl
       .create({
         component: NewGameComponent,
-        componentProps: {
-          gamer: currentGamer
-        },
-        animated: true
+        animated: true,
       })
-      .then(modalEl => {
+      .then((modalEl) => {
         modalEl.present();
         return modalEl.onDidDismiss();
       })
-      .then(resData => {
+      .then((resData) => {
         if (resData.role === 'success') {
-          const topTenG = [...topTenGames];
-          let isUpdateTopTen = false;
-          if (topTenG.length <= 9) {
-            topTenG.push(resData.data);
-            topTenG.sort((a, b) => a.duration - b.duration);
-            isUpdateTopTen = true;
-          } else {
-            if (topTenG[9].duration > resData.data.duration) {
-              topTenG[9] = resData.data;
-              topTenG.sort((a, b) => a.duration - b.duration);
-              isUpdateTopTen = true;
-            }
-          }
-          if (isUpdateTopTen) {
-            this.lastGameIndex = topTenG.findIndex(hitGame =>
-              hitGame.duration === resData.data.duration
-            );
-            this.hitService.setTopTenGames([...topTenG]);
-          }
+          console.log('Success...');
+          this.store.dispatch(HitsAction.addNewGameInTopTen({
+            newGame: resData.data
+          }));
+        } else {
+          console.log('Cancel...');
         }
       });
   }
@@ -89,11 +69,4 @@ export class MainPage implements OnInit, OnDestroy {
   onOpenDetails(index: number) {
     this.router.navigate(['hits/main/games', index]);
   }
-
-  ngOnDestroy() {
-    if (this.sub) {
-      this.sub.unsubscribe();
-    }
-  }
 }
-

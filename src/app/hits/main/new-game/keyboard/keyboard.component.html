@@ -1,76 +1,57 @@
-<ion-grid fixed>
+<ion-grid fixed *ngIf="(keyboard$|async) as isOdabran">
   <ion-row>
     <ion-col size="2" offset="2" class="ion-text-center">
       <ion-button
-        (click)="onSelectNumber(1)" expand="block" shape="round" color="primary" [disabled]="isOdabran[1]">1
+        (click)="onEnterNumber(1)" expand="block" shape="round" color="primary" [disabled]="isOdabran[1]">1
       </ion-button>
     </ion-col>
     <ion-col size="2">
       <ion-button
-        (click)="onSelectNumber(2)" expand="block" shape="round" color="primary" [disabled]="isOdabran[2]">2
+        (click)="onEnterNumber(2)" expand="block" shape="round" color="primary" [disabled]="isOdabran[2]">2
       </ion-button>
     </ion-col>
     <ion-col size="2">
       <ion-button
-        (click)="onSelectNumber(3)" expand="block" shape="round" color="primary" [disabled]="isOdabran[3]">3
+        (click)="onEnterNumber(3)" expand="block" shape="round" color="primary" [disabled]="isOdabran[3]">3
       </ion-button>
     </ion-col>
     <ion-col size="2">
       <ion-button
-        (click)="onSelectNumber(4)" expand="block" shape="round" color="primary" [disabled]="isOdabran[4]">4
+        (click)="onEnterNumber(4)" expand="block" shape="round" color="primary" [disabled]="isOdabran[4]">4
       </ion-button>
     </ion-col>
   </ion-row>
   <ion-row>
     <ion-col size="2" offset="2" class="ion-text-center">
       <ion-button
-        (click)="onSelectNumber(5)" expand="block" shape="round" color="primary" [disabled]="isOdabran[5]">5
+        (click)="onEnterNumber(5)" expand="block" shape="round" color="primary" [disabled]="isOdabran[5]">5
       </ion-button>
     </ion-col>
     <ion-col size="2">
       <ion-button
-        (click)="onSelectNumber(6)" expand="block" shape="round" color="primary" [disabled]="isOdabran[6]">6
+        (click)="onEnterNumber(6)" expand="block" shape="round" color="primary" [disabled]="isOdabran[6]">6
       </ion-button>
     </ion-col>
     <ion-col size="2">
       <ion-button
-        (click)="onSelectNumber(7)" expand="block" shape="round" color="primary" [disabled]="isOdabran[7]">7
+        (click)="onEnterNumber(7)" expand="block" shape="round" color="primary" [disabled]="isOdabran[7]">7
       </ion-button>
     </ion-col>
     <ion-col size="2">
       <ion-button
-        (click)="onSelectNumber(8)" expand="block" shape="round" color="primary" [disabled]="isOdabran[8]">8
+        (click)="onEnterNumber(8)" expand="block" shape="round" color="primary" [disabled]="isOdabran[8]">8
       </ion-button>
     </ion-col>
   </ion-row>
   <ion-row>
     <ion-col size="2" offset="4" class="ion-text-center">
       <ion-button
-        (click)="onSelectNumber(9)" expand="block" shape="round" color="primary" [disabled]="isOdabran[9]">9
+        (click)="onEnterNumber(9)" expand="block" shape="round" color="primary" [disabled]="isOdabran[9]">9
       </ion-button>
     </ion-col>
     <ion-col size="2">
       <ion-button
-        (click)="onSelectNumber(0)" expand="block" shape="round" color="primary" [disabled]="isOdabran[0]">0
-      </ion-button>
-    </ion-col>
-  </ion-row>
-  <ion-row>
-    <ion-col size="4">
-      <ion-button
-        (click)="onCancel()" expand="block" shape="round" color="primary">Cancel
-      </ion-button>
-    </ion-col>
-    <ion-col size="4">
-      <ion-button
-        *ngIf="isHint"
-        (click)="onHint()"
-        expand="block" shape="round" color="primary">Hint
-      </ion-button>
-    </ion-col>
-    <ion-col size="4">
-      <ion-button
-        (click)="onOk()" expand="block" shape="round" color="primary" [disabled]="nums.length < 4">Ok
+        (click)="onEnterNumber(0)" expand="block" shape="round" color="primary" [disabled]="isOdabran[0]">0
       </ion-button>
     </ion-col>
   </ion-row>

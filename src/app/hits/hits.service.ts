@@ -19,64 +19,64 @@ export class HitsService {
     private toastCtrl: ToastController
   ) { }
 
-  get topTenGames() {
-    return this._topTenGames.asObservable();
-  }
+  // get topTenGames() {
+  //   return this._topTenGames.asObservable();
+  // }
 
-  get currentGamer() {
-    return this._currentGamer.asObservable();
-  }
+  // get currentGamer() {
+  //   return this._currentGamer.asObservable();
+  // }
 
-  setTopTenGames(hitGames: HitGame[]) {
-    this.setGamerAndTopTenGames(this._currentGamer.getValue(), hitGames);
-  }
+  // setTopTenGames(hitGames: HitGame[]) {
+  //   this.setGamerAndTopTenGames(this._currentGamer.getValue(), hitGames);
+  // }
 
-  getOneGame(index: number) {
-    return of(this._topTenGames.getValue()[index]);
-  }
+  // getOneGame(index: number) {
+  //   return of(this._topTenGames.getValue()[index]);
+  // }
 
-  setCurrentGamer(currentGamer: string) {
-    this.setGamerAndTopTenGames(currentGamer, this._topTenGames.getValue());
-  }
+  // setCurrentGamer(currentGamer: string) {
+  //   this.setGamerAndTopTenGames(currentGamer, this._topTenGames.getValue());
+  // }
 
-  clearTopTenGames() {
-    this.setGamerAndTopTenGames(this._currentGamer.getValue(), []);
-  }
+  // clearTopTenGames() {
+  //   this.setGamerAndTopTenGames(this._currentGamer.getValue(), []);
+  // }
 
-  onLoadTopTenGames() {
-    this.setGamerAndTopTenGames(this._currentGamer.getValue(), TOPTEN);
-  }
+  // onLoadTopTenGames() {
+  //   this.setGamerAndTopTenGames(this._currentGamer.getValue(), TOPTEN);
+  // }
 
-  checkGamerAndTopTenGames = async () => {
-    const { value } = await Storage.get({ key: 'hit4n' });
-    const hit4n = JSON.parse(value) as {
-      currentGamer: string;
-      topTenGames: HitGame[];
-    };
-    if (hit4n && hit4n.currentGamer) {
-      this._currentGamer.next(hit4n.currentGamer);
-    } else {
-      this._currentGamer.next('Guest');
-    }
-    if (hit4n && hit4n.topTenGames && hit4n.topTenGames.length > 0) {
-      this._topTenGames.next(hit4n.topTenGames);
-    } else {
-      this._topTenGames.next([]);
-    }
-  };
+  // checkGamerAndTopTenGames = async () => {
+  //   const { value } = await Storage.get({ key: 'hit4n' });
+  //   const hit4n = JSON.parse(value) as {
+  //     currentGamer: string;
+  //     topTenGames: HitGame[];
+  //   };
+  //   if (hit4n && hit4n.currentGamer) {
+  //     this._currentGamer.next(hit4n.currentGamer);
+  //   } else {
+  //     this._currentGamer.next('Guest');
+  //   }
+  //   if (hit4n && hit4n.topTenGames && hit4n.topTenGames.length > 0) {
+  //     this._topTenGames.next(hit4n.topTenGames);
+  //   } else {
+  //     this._topTenGames.next([]);
+  //   }
+  // };
 
-  setGamerAndTopTenGames = async (currentGamer: string, topTenGames: HitGame[]) => {
-    const gamerAndTopTenGames = {
-      currentGamer,
-      topTenGames
-    };
-    const hit4n = JSON.stringify(gamerAndTopTenGames);
-    await Storage.set({
-      key: 'hit4n',
-      value: hit4n
-    }).then(() => {
-      this._currentGamer.next(currentGamer);
-      this._topTenGames.next(topTenGames);
-    });
-  };
+  // setGamerAndTopTenGames = async (currentGamer: string, topTenGames: HitGame[]) => {
+  //   const gamerAndTopTenGames = {
+  //     currentGamer,
+  //     topTenGames
+  //   };
+  //   const hit4n = JSON.stringify(gamerAndTopTenGames);
+  //   await Storage.set({
+  //     key: 'hit4n',
+  //     value: hit4n
+  //   }).then(() => {
+  //     this._currentGamer.next(currentGamer);
+  //     this._topTenGames.next(topTenGames);
+  //   });
+  // };
 }

@@ -1,57 +1,41 @@
-import { getInterpolationArgsLength } from '@angular/compiler/src/render3/view/util';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NavController } from '@ionic/angular';
-import { Observable, of, Subscription } from 'rxjs';
-import { map, take, switchMap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
+import * as fromApp from '../../../app.reducer';
+import * as HitsAction from './../../store/hits.actions';
 import { HitGame } from '../../hits.model';
-import { HitsService } from '../../hits.service';
 
 @Component({
   selector: 'app-details-game',
   templateUrl: './details-game.page.html',
   styleUrls: ['./details-game.page.scss'],
 })
-export class DetailsGamePage implements OnInit, OnDestroy {
-  hitGame$: Observable<HitGame>;
-  xxxx$: Observable<number[]>;
-  hitGame: HitGame;
-  xxxx: number[] = [];
+export class DetailsGamePage implements OnInit {
+  oneGame$: Observable<HitGame>;
   id: number;
-
-  private sub: Subscription;
-
   constructor(
     private route: ActivatedRoute,
-    private navCtrl: NavController,
-    private hitsService: HitsService
+    private store: Store<fromApp.State>
   ) { }
 
   ngOnInit() {
-    this.route.paramMap.pipe(
+    this.oneGame$ = this.route.paramMap.pipe(
       switchMap(paramMap => {
         if (paramMap.has('id')) {
-          const id = +paramMap.get('id');
-          this.id = id;
-          return this.hitsService.getOneGame(id);
+          this.id = +paramMap.get('id');
+          this.store.dispatch(
+            HitsAction.setIndexGame({
+              index: this.id
+            })
+          );
+          return this.store.select(fromApp.getOneGame);
         } else {
           return of(null);
         }
-      })).subscribe(hitGame => {
-        if ((typeof hitGame) === 'object') {
-          this.hitGame = hitGame as HitGame;
-          const last = this.hitGame.hits.length - 1;
-          this.xxxx = this.hitGame.hits[last].aaaa.map(a => a.a);
-        } else {
-          this.navCtrl.navigateBack('hits/main');
-        }
-      });
+      })
+    );
   }
 
-
-  ngOnDestroy() {
-    if (this.sub) {
-      this.sub.unsubscribe();
-    }
-  }
 }
