@@ -74,9 +74,9 @@ export class NewGameComponent implements OnInit {
       this.hintRows.push(i);
       this.isHintRow[i] = true;
       this.store.dispatch(MainActions.addHint({ i, j }));
-      this.presentToast(`Already used hints in ${this.hintRows.map(n => n+1).toString()} rows`);
+      //this.presentToast(`Already used hints in ${this.hintRows.map(n => n+1).toString()} rows`);
     } else {
-      this.presentToast(`Already used hints in <bold>${i + 1}.</bold> row`);
+      //this.presentToast(`Already used hints in <bold>${i + 1}.</bold> row`);
     }
   }
 
@@ -84,7 +84,7 @@ export class NewGameComponent implements OnInit {
     const toast = await this.toastCtrl.create({
       message,
       duration: 1500,
-      position: 'top',
+      position: 'bottom',
       color: 'medium'
     });
     toast.present();
