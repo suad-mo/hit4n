@@ -1,8 +1,8 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'hit4n',
+  appId: 'com.suad.hit4n',
+  appName: 'ionic-hit4n',
   webDir: 'www',
   bundledWebRuntime: false
 };
